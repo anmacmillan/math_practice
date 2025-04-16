@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Practice - Times Tables</title>
+    <style>
+        :root {
+            --primary-color: #4285F4;
+            --primary-light: #e8f0fe;
+            --secondary-color: #34A853;
+            --danger-color: #EA4335;
+            --warning-color: #FBBC05;
+            --dark-color: #202124;
+            --light-color: #FFFFFF;
+            --gray-color: #5F6368;
+            --background-color: #F8F9FA;
+            --font-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(32, 33, 36, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--background-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .subheading {
+            color: var(--gray-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Main Game Screen */
+        .problem-display {
+            font-size: 3rem;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+        .problem-display.animate {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .answer-form {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .answer-input {
+            padding: 12px 15px;
+            font-size: 1.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            width: 150px;
+            text-align: center;
+            margin-right: 10px;
+            transition: border-color var(--transition-speed);
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .btn:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background-color: var(--gray-color);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #2a8843;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+
+        .btn-warning:hover {
+            background-color: #e0aa00;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: #d03028;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 1rem;
+        }
+
+        .feedback {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            font-size: 1.2rem;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: opacity var(--transition-speed), height var(--transition-speed);
+        }
+
+        .feedback.visible {
+            opacity: 1;
+            height: auto;
+            min-height: 60px;
+        }
+
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            background-color: var(--primary-light);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .checkbox-item label {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        /* Timer and Progress */
+        .timer-container {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .timer {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .progress-container {
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--secondary-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+
+        /* Stats Display */
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            background-color: var(--primary-light);
+            border-radius: var(--border-radius);
+            padding: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            min-width: 100px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+
+        /* Visual Rewards */
+        .tower-container {
+            text-align: center;
+            height: 200px;
+            position: relative;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .tower-block {
+            width: 80px;
+            height: 20px;
+            background-color: var(--primary-color);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            margin-bottom: -1px;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s ease;
+        }
+
+        .tower-block.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .tower-block:nth-child(odd) {
+            background-color: var(--secondary-color);
+        }
+
+        .tower-block:nth-child(5n) {
+            background-color: var(--warning-color);
+            width: 100px;
+        }
+
+        /* Confetti for milestone streaks */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary-color);
+            opacity: 0;
+            transition: transform 1s ease, top 1s ease, opacity 0.3s ease;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .problem-display {
+                font-size: 2.5rem;
+            }
+
+            .answer-form {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .answer-input {
+                margin-right: 0;
+                margin-bottom: 10px;
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .checkbox-group {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .problem-display {
+                font-size: 2rem;
+            }
+
+            .stat-item {
+                min-width: 70px;
+                padding: 5px;
+            }
+
+            .stat-value {
+                font-size: 1.2rem;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
+            }
+        }
+
+        .achievement-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.5s ease-out;
+            z-index: 1000;
+            box-shadow: var(--box-shadow);
+        }
+
+        .achievement-icon {
+            font-size: 2em;
+        }
+
+        .achievement-details {
+            flex-grow: 1;
+        }
+
+        .achievement-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .achievement-desc {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .mastery-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .mastery-cell {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            background: var(--gray-color);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .mastery-cell.mastered {
+            background: var(--secondary-color);
+        }
+
+        .mastery-cell.in-progress {
+            background: var(--warning-color);
+        }
+
+        .performance-insights {
+            margin: 20px;
+            padding: 20px;
+            background: var(--primary-light);
+            border-radius: var(--border-radius);
+        }
+
+        .insight-section {
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .insight-section h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .problem-tag {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 3px;
+            background: var(--warning-color);
+            color: var(--dark-color);
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .problem-tag.slow {
+            background: var(--warning-color);
+        }
+
+        .problem-tag.error {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .problem-tag.mastered {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        /* Add new styles */
+        .login-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--primary-light);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .trend-chart {
+            width: 100%;
+            height: 200px;
+            margin: 20px 0;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 10px;
+        }
+
+        .difficulty-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .difficulty-easy { background: var(--secondary-color); }
+        .difficulty-medium { background: var(--warning-color); }
+        .difficulty-hard { background: var(--danger-color); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .progress-chart {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="login-container">
+                <h2>Welcome to Math Practice!</h2>
+                <div class="form-group">
+                    <label for="username">Name:</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter your name">
+                </div>
+                <div style="margin: 20px 0;">
+                    <button id="loginButton" class="btn">Start Learning</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rest of the screens -->
+        <div id="startScreen" class="screen">
+            <header>
+                <div class="user-profile">
+                    <div class="user-avatar"></div>
+                    <div class="user-info">
+                        <h3 id="userDisplayName">Welcome back!</h3>
+                        <div id="userStats">
+                            <small>Total problems solved: <span id="totalSolved">0</span></small>
+                        </div>
+                    </div>
+                    <button id="logoutButton" class="btn btn-sm" style="margin-left: auto;">Logout</button>
+                </div>
+                <h1>Math Practice</h1>
+                <p class="subheading">Master your times tables!</p>
+            </header>
+            <div style="text-align: center;">
+                <h2>Ready to practice?</h2>
+                <p>Challenge yourself with multiplication problems and track your progress.</p>
+                
+                <div class="settings-panel">
+                    <h3>Settings</h3>
+                    
+                    <div class="form-group">
+                        <label>Times Tables to Practice:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="selectAll" checked>
+                                <label for="selectAll">Select All</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="randomOption">
+                                <label for="randomOption">Random Selection</label>
+                            </div>
+                        </div>
+                        
+                        <div class="checkbox-group" id="tablesCheckboxes">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timerMinutes">Timer (minutes):</label>
+                        <select id="timerMinutes" class="form-control">
+                            <option value="1">1 minute</option>
+                            <option value="2">2 minutes</option>
+                            <option value="3">3 minutes</option>
+                            <option value="5">5 minutes</option>
+                            <option value="10" selected>10 minutes</option>
+                            <option value="15">15 minutes</option>
+                            <option value="20">20 minutes</option>
+                            <option value="30">30 minutes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="questionTarget">Number of Questions:</label>
+                        <select id="questionTarget" class="form-control">
+                            <option value="20">20 questions</option>
+                            <option value="50">50 questions</option>
+                            <option value="100" selected>100 questions</option>
+                            <option value="200">200 questions</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <button id="startButton" class="btn">Start Practice</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="timer-container">
+                <div>Time Remaining: <span id="timerDisplay" class="timer">10:00</span></div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div class="progress-text">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">100</span></div>
+            </div>
+
+            <div id="problemDisplay" class="problem-display">6 × 7 = ?</div>
+
+            <form id="answerForm" class="answer-form">
+                <input type="number" id="answerInput" class="answer-input" placeholder="?" autofocus>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+
+            <div id="feedback" class="feedback">
+                <!-- Feedback will be displayed here -->
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-value" id="correctCount">0</div>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="incorrectCount">0</div>
+                    <div class="stat-label">Incorrect</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="accuracy">0%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="screen">
+            <h2>Practice Complete!</h2>
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-value" id="finalCorrect">0</div>
+                    <div class="stat-label">Total Correct</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="finalAccuracy">0%</div>
+                    <div class="stat-label">Final Accuracy</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="finalTime">0:00</div>
+                    <div class="stat-label">Time Taken</div>
+                </div>
+            </div>
+
+            <div class="performance-insights">
+                <h3>Performance Insights</h3>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Session Speed</h4>
+                        <div class="progress-chart" id="speedChart"></div>
+                        <div id="avgSpeed">Average: 0s</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Accuracy Trend</h4>
+                        <div class="trend-chart" id="accuracyTrend"></div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Mastery Progress</h4>
+                        <div id="masteryProgress">0/144 pairs mastered</div>
+                    </div>
+                </div>
+
+                <div id="strugglingTables" class="insight-section">
+                    <!-- Will be populated with tables that need more practice -->
+                </div>
+                <div id="speedImprovements" class="insight-section">
+                    <!-- Will be populated with problems that took longer to solve -->
+                </div>
+                <div id="recentMistakes" class="insight-section">
+                    <!-- Will show recent incorrect answers -->
+                </div>
+
+                <div class="insight-section">
+                    <h4>Learning Recommendations</h4>
+                    <div id="recommendations">
+                        <!-- Will be populated with personalized recommendations -->
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button id="focusPracticeButton" class="btn btn-secondary" style="margin-right: 10px;">Practice Weak Areas</button>
+                <button id="restartButton" class="btn">Practice Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            currentScreen: 'start',
+            selectedTables: [],
+            timerMinutes: 10,
+            questionTarget: 100,
+            currentQuestion: 0,
+            correctCount: 0,
+            incorrectCount: 0,
+            currentProblem: null,
+            timerInterval: null,
+            timeRemaining: 0,
+            problemStats: {},
+            reviewQueue: [],
+            lastReviewTime: Date.now(),
+            questionStartTime: null,
+            achievements: {},
+            settings: {
+                responseTimeWeight: 0.5,
+                maxResponseTime: 10,
+                minInterval: 1,
+                maxInterval: 10080,
+                startingEase: 2.5,
+                easeModifier: 0.1
+            },
+            sessionHistory: [],
+            weakAreas: new Set(),
+            slowProblems: new Set(),
+            currentUser: null,
+            userStats: {
+                totalSolved: 0,
+                sessionsCompleted: 0,
+                averageAccuracy: 0,
+                averageSpeed: 0,
+                masteredPairs: 0,
+                history: [],
+                lastSession: null
+            }
+        };
+
+        // Add achievement definitions
+        const ACHIEVEMENTS = {
+            SPEED_DEMON: { id: 'speed_demon', name: 'Speed Demon', desc: 'Answer correctly in under 2 seconds', icon: '⚡' },
+            PERFECT_10: { id: 'perfect_10', name: 'Perfect 10', desc: '10 correct answers in a row', icon: '🎯' },
+            TABLE_MASTER: { id: 'table_master', name: 'Table Master', desc: 'Master an entire times table', icon: '👑' },
+            MARATHON: { id: 'marathon', name: 'Marathon', desc: 'Complete 100 problems in one session', icon: '🏃' },
+            ACCURACY_KING: { id: 'accuracy_king', name: 'Accuracy King', desc: '95% accuracy in 50+ problems', icon: '🎪' }
+        };
+
+        // DOM Elements
+        const screens = {
+            start: document.getElementById('startScreen'),
+            game: document.getElementById('gameScreen'),
+            results: document.getElementById('resultsScreen')
+        };
+
+        // Initialize checkboxes for times tables
+        function initializeCheckboxes() {
+            const container = document.getElementById('tablesCheckboxes');
+            for (let i = 1; i <= 12; i++) {
+                const div = document.createElement('div');
+                div.className = 'checkbox-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="table${i}" value="${i}" checked>
+                    <label for="table${i}">${i}×</label>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        // Handle "Select All" checkbox
+        document.getElementById('selectAll').addEventListener('change', (e) => {
+            const checkboxes = document.querySelectorAll('#tablesCheckboxes input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = e.target.checked);
+        });
+
+        // Start button click handler
+        document.getElementById('startButton').addEventListener('click', () => {
+            // Get selected tables
+            const checkboxes = document.querySelectorAll('#tablesCheckboxes input[type="checkbox"]:checked');
+            gameState.selectedTables = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            
+            if (gameState.selectedTables.length === 0) {
+                alert('Please select at least one times table to practice!');
+                return;
+            }
+
+            // Get timer and question settings
+            gameState.timerMinutes = parseInt(document.getElementById('timerMinutes').value);
+            gameState.questionTarget = parseInt(document.getElementById('questionTarget').value);
+            gameState.timeRemaining = gameState.timerMinutes * 60;
+
+            // Start the game
+            startGame();
+        });
+
+        // Learning system functions
+        function updateProblemStats(problem, isCorrect, responseTime) {
+            const key = `${problem.table}x${problem.multiplier}`;
+            if (!gameState.problemStats[key]) {
+                gameState.problemStats[key] = {
+                    correct: 0,
+                    incorrect: 0,
+                    lastSeen: Date.now(),
+                    interval: gameState.settings.minInterval,
+                    easeFactor: gameState.settings.startingEase,
+                    nextReview: Date.now(),
+                    responseTimes: [],
+                    averageResponseTime: 0,
+                    streak: 0,
+                    mastered: false
+                };
+            }
+
+            const stats = gameState.problemStats[key];
+            stats.responseTimes.push(responseTime);
+            
+            // Update average response time (last 5 attempts)
+            const recentTimes = stats.responseTimes.slice(-5);
+            stats.averageResponseTime = recentTimes.reduce((a, b) => a + b, 0) / recentTimes.length;
+
+            if (isCorrect) {
+                stats.correct++;
+                stats.streak++;
+                // Adjust interval based on response time
+                const timeWeight = Math.max(0, 1 - (responseTime / gameState.settings.maxResponseTime));
+                const responseTimeFactor = 1 + (timeWeight * gameState.settings.responseTimeWeight);
+                stats.interval = Math.min(
+                    gameState.settings.maxInterval,
+                    Math.round(stats.interval * stats.easeFactor * responseTimeFactor)
+                );
+                stats.easeFactor = Math.min(3.0, stats.easeFactor + gameState.settings.easeModifier);
+            } else {
+                stats.incorrect++;
+                stats.streak = 0;
+                stats.interval = gameState.settings.minInterval;
+                stats.easeFactor = Math.max(1.3, stats.easeFactor - gameState.settings.easeModifier);
+            }
+
+            stats.lastSeen = Date.now();
+            stats.nextReview = Date.now() + (stats.interval * 60 * 1000);
+            
+            // Check for mastery (90% accuracy over last 10 attempts)
+            const attempts = stats.correct + stats.incorrect;
+            if (attempts >= 10) {
+                const last10Accuracy = (stats.correct / attempts) * 100;
+                stats.mastered = last10Accuracy >= 90;
+            }
+
+            // Save to localStorage
+            localStorage.setItem('mathPracticeStats', JSON.stringify(gameState.problemStats));
+            
+            // Check for achievements
+            checkAchievements(problem, isCorrect, responseTime);
+
+            // Track session history
+            gameState.sessionHistory.push({
+                problem: problem,
+                isCorrect: isCorrect,
+                responseTime: responseTime,
+                timestamp: Date.now()
+            });
+
+            // Track weak areas and slow problems
+            if (!isCorrect) {
+                gameState.weakAreas.add(key);
+            }
+            if (responseTime > gameState.settings.maxResponseTime / 2) {
+                gameState.slowProblems.add(key);
+            }
+        }
+
+        function loadProblemStats() {
+            const saved = localStorage.getItem('mathPracticeStats');
+            if (saved) {
+                gameState.problemStats = JSON.parse(saved);
+            }
+        }
+
+        function getDifficultyScore(table, multiplier) {
+            const key = `${table}x${multiplier}`;
+            const stats = gameState.problemStats[key];
+            
+            if (!stats) return 1;
+            
+            const totalAttempts = stats.correct + stats.incorrect;
+            if (totalAttempts === 0) return 1;
+            
+            const accuracy = stats.correct / totalAttempts;
+            const timeSinceLastReview = (Date.now() - stats.lastSeen) / (1000 * 60);
+            const dueForReview = Date.now() > stats.nextReview ? 1.5 : 0.5;
+            
+            // Factor in response time
+            const responseTimeFactor = stats.averageResponseTime / gameState.settings.maxResponseTime;
+            
+            // Higher score = higher priority for review
+            return (1 - accuracy) * dueForReview * 
+                   (1 + (timeSinceLastReview / 1440)) * 
+                   (1 + responseTimeFactor);
+        }
+
+        // Modify generateProblem to use the learning system
+        function generateProblem() {
+            // 20% chance of completely random problem
+            if (Math.random() < 0.2) {
+                const table = gameState.selectedTables[Math.floor(Math.random() * gameState.selectedTables.length)];
+                const multiplier = Math.floor(Math.random() * 12) + 1;
+                return { table, multiplier, answer: table * multiplier };
+            }
+
+            // Generate all possible problems and their difficulty scores
+            let problems = [];
+            for (let table of gameState.selectedTables) {
+                for (let multiplier = 1; multiplier <= 12; multiplier++) {
+                    const score = getDifficultyScore(table, multiplier);
+                    problems.push({ table, multiplier, score });
+                }
+            }
+
+            // Sort by difficulty score and add some randomness
+            problems.sort((a, b) => b.score - a.score);
+            const topProblems = problems.slice(0, Math.min(5, problems.length));
+            const selected = topProblems[Math.floor(Math.random() * topProblems.length)];
+            
+            return {
+                table: selected.table,
+                multiplier: selected.multiplier,
+                answer: selected.table * selected.multiplier
+            };
+        }
+
+        // Update the display
+        function updateDisplay() {
+            const problem = gameState.currentProblem;
+            document.getElementById('problemDisplay').textContent = `${problem.table} × ${problem.multiplier} = ?`;
+            document.getElementById('currentQuestion').textContent = gameState.currentQuestion + 1;
+            document.getElementById('totalQuestions').textContent = gameState.questionTarget;
+            
+            // Update progress bar
+            const progress = (gameState.currentQuestion / gameState.questionTarget) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+
+            // Update stats
+            document.getElementById('correctCount').textContent = gameState.correctCount;
+            document.getElementById('incorrectCount').textContent = gameState.incorrectCount;
+            const accuracy = gameState.currentQuestion === 0 ? 0 : 
+                Math.round((gameState.correctCount / gameState.currentQuestion) * 100);
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+        }
+
+        // Start the game
+        function startGame() {
+            loadProblemStats();
+            gameState.currentQuestion = 0;
+            gameState.correctCount = 0;
+            gameState.incorrectCount = 0;
+            gameState.currentProblem = generateProblem();
+            showScreen('game');
+            startTimer();
+            updateDisplay();
+            startQuestionTimer();
+            document.getElementById('answerInput').focus();
+        }
+
+        // Timer functions
+        function startTimer() {
+            updateTimerDisplay();
+            gameState.timerInterval = setInterval(() => {
+                gameState.timeRemaining--;
+                updateTimerDisplay();
+                if (gameState.timeRemaining <= 0) {
+                    clearInterval(gameState.timerInterval);
+                    endGame('timeout');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameState.timeRemaining / 60);
+            const seconds = gameState.timeRemaining % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Add stats tracking for response times
+        function startQuestionTimer() {
+            gameState.questionStartTime = Date.now();
+        }
+
+        function getResponseTime() {
+            return (Date.now() - gameState.questionStartTime) / 1000; // Convert to seconds
+        }
+
+        // Achievement system
+        function checkAchievements(problem, isCorrect, responseTime) {
+            if (!gameState.achievements) {
+                gameState.achievements = {};
+            }
+
+            // Speed Demon
+            if (isCorrect && responseTime < 2 && !gameState.achievements.SPEED_DEMON) {
+                unlockAchievement(ACHIEVEMENTS.SPEED_DEMON);
+            }
+
+            // Perfect 10
+            if (isCorrect && getProblemStats(problem).streak === 10) {
+                unlockAchievement(ACHIEVEMENTS.PERFECT_10);
+            }
+
+            // Table Master
+            if (isTableMastered(problem.table)) {
+                unlockAchievement(ACHIEVEMENTS.TABLE_MASTER);
+            }
+
+            // Marathon
+            if (gameState.currentQuestion === 100) {
+                unlockAchievement(ACHIEVEMENTS.MARATHON);
+            }
+
+            // Accuracy King
+            if (gameState.currentQuestion >= 50) {
+                const accuracy = (gameState.correctCount / gameState.currentQuestion) * 100;
+                if (accuracy >= 95) {
+                    unlockAchievement(ACHIEVEMENTS.ACCURACY_KING);
+                }
+            }
+        }
+
+        function unlockAchievement(achievement) {
+            if (!gameState.achievements[achievement.id]) {
+                gameState.achievements[achievement.id] = {
+                    unlocked: true,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('mathAchievements', JSON.stringify(gameState.achievements));
+                showAchievementNotification(achievement);
+            }
+        }
+
+        function showAchievementNotification(achievement) {
+            const notification = document.createElement('div');
+            notification.className = 'achievement-notification';
+            notification.innerHTML = `
+                <div class="achievement-icon">${achievement.icon}</div>
+                <div class="achievement-details">
+                    <div class="achievement-name">${achievement.name}</div>
+                    <div class="achievement-desc">${achievement.desc}</div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Show feedback
+        function showFeedback(message, isCorrect) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = `feedback visible ${isCorrect ? 'correct' : 'incorrect'}`;
+            setTimeout(() => {
+                feedback.className = 'feedback';
+            }, 2000);
+        }
+
+        // End game
+        function endGame(reason = 'complete') {
+            // Clear any existing timer
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+                gameState.timerInterval = null;
+            }
+            
+            // Calculate final stats
+            const finalAccuracy = gameState.currentQuestion === 0 ? 0 : 
+                Math.round((gameState.correctCount / gameState.currentQuestion) * 100);
+            
+            const timeSpent = (gameState.timerMinutes * 60) - gameState.timeRemaining;
+            const minutes = Math.floor(timeSpent / 60);
+            const seconds = timeSpent % 60;
+            
+            // Update display elements
+            document.getElementById('finalCorrect').textContent = gameState.correctCount;
+            document.getElementById('finalAccuracy').textContent = `${finalAccuracy}%`;
+            document.getElementById('finalTime').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            // Update user stats
+            gameState.userStats.totalSolved += gameState.currentQuestion;
+            gameState.userStats.sessionsCompleted++;
+            gameState.userStats.history.push({
+                date: Date.now(),
+                accuracy: finalAccuracy,
+                questionsAnswered: gameState.currentQuestion,
+                timeSpent: timeSpent,
+                reason: reason
+            });
+
+            // Save stats
+            saveUserStats();
+
+            // Update visualizations and analysis
+            updateMasteryGrid();
+            analyzePerformance();
+
+            // Switch to results screen
+            showScreen('results');
+        }
+
+        // Screen management
+        function showScreen(screenName) {
+            Object.values(screens).forEach(screen => screen.classList.remove('active'));
+            screens[screenName].classList.add('active');
+            gameState.currentScreen = screenName;
+        }
+
+        // Restart button
+        document.getElementById('restartButton').addEventListener('click', () => {
+            showScreen('start');
+        });
+
+        // Add mastery visualization to the results screen
+        function updateMasteryGrid() {
+            const masteryGrid = document.createElement('div');
+            masteryGrid.className = 'mastery-grid';
+            
+            for (let i = 1; i <= 12; i++) {
+                for (let j = 1; j <= 12; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'mastery-cell';
+                    const stats = getProblemStats({ table: i, multiplier: j });
+                    
+                    if (stats.mastered) {
+                        cell.classList.add('mastered');
+                    } else if (stats.correct > 0) {
+                        cell.classList.add('in-progress');
+                    }
+                    
+                    cell.textContent = `${i}×${j}`;
+                    masteryGrid.appendChild(cell);
+                }
+            }
+            
+            const resultsScreen = document.getElementById('resultsScreen');
+            const existingGrid = resultsScreen.querySelector('.mastery-grid');
+            if (existingGrid) {
+                existingGrid.remove();
+            }
+            resultsScreen.insertBefore(masteryGrid, resultsScreen.firstChild);
+        }
+
+        // Helper function to get problem stats
+        function getProblemStats(problem) {
+            const key = `${problem.table}x${problem.multiplier}`;
+            return gameState.problemStats[key] || {
+                correct: 0,
+                incorrect: 0,
+                streak: 0,
+                mastered: false
+            };
+        }
+
+        // Helper function to check if a table is mastered
+        function isTableMastered(table) {
+            for (let i = 1; i <= 12; i++) {
+                const stats = getProblemStats({ table, multiplier: i });
+                if (!stats.mastered) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Add the missing form submission handler
+        document.getElementById('answerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const answerInput = document.getElementById('answerInput');
+            const userAnswer = parseInt(answerInput.value);
+            
+            if (isNaN(userAnswer)) return;
+
+            const responseTime = getResponseTime();
+            const isCorrect = userAnswer === gameState.currentProblem.answer;
+            updateProblemStats(gameState.currentProblem, isCorrect, responseTime);
+
+            if (isCorrect) {
+                gameState.correctCount++;
+                showFeedback('Correct!', true);
+            } else {
+                gameState.incorrectCount++;
+                showFeedback(`Incorrect. ${gameState.currentProblem.table} × ${gameState.currentProblem.multiplier} = ${gameState.currentProblem.answer}`, false);
+            }
+
+            gameState.currentQuestion++;
+            
+            // Check if we've reached the question target
+            if (gameState.currentQuestion >= gameState.questionTarget) {
+                endGame('questions_complete');
+            } else {
+                // Only continue if the game hasn't ended
+                if (gameState.timeRemaining > 0) {
+                    gameState.currentProblem = generateProblem();
+                    updateDisplay();
+                    startQuestionTimer();
+                    answerInput.value = '';
+                    answerInput.focus();
+                }
+            }
+        });
+
+        // Add performance analysis functions
+        function analyzePerformance() {
+            const strugglingTables = document.getElementById('strugglingTables');
+            const speedImprovements = document.getElementById('speedImprovements');
+            const recentMistakes = document.getElementById('recentMistakes');
+
+            // Analyze struggling tables
+            const tableStats = {};
+            for (let i = 1; i <= 12; i++) {
+                tableStats[i] = { correct: 0, total: 0, avgTime: 0, times: [] };
+            }
+
+            gameState.sessionHistory.forEach(entry => {
+                const table = entry.problem.table;
+                tableStats[table].total++;
+                if (entry.isCorrect) tableStats[table].correct++;
+                tableStats[table].times.push(entry.responseTime);
+            });
+
+            // Generate detailed insights
+            let struggleHtml = '<h4>Areas Needing Practice</h4>';
+            let speedHtml = '<h4>Speed Improvements</h4>';
+            let mistakesHtml = '<h4>Recent Mistakes</h4>';
+
+            // Analyze struggling tables with more detail
+            Object.entries(tableStats).forEach(([table, stats]) => {
+                if (stats.total > 0) {
+                    const accuracy = (stats.correct / stats.total) * 100;
+                    const avgTime = stats.times.reduce((a, b) => a + b, 0) / stats.times.length;
+                    
+                    if (accuracy < 80) {
+                        struggleHtml += `
+                            <div class="problem-tag error">
+                                ${table}× table: ${Math.round(accuracy)}% accuracy
+                                <br>
+                                <small>${stats.correct} correct out of ${stats.total} attempts</small>
+                            </div>
+                        `;
+                    }
+                    
+                    if (avgTime > 5) {
+                        speedHtml += `
+                            <div class="problem-tag slow">
+                                ${table}× table: avg ${avgTime.toFixed(1)}s
+                                <br>
+                                <small>Target: under 5 seconds</small>
+                            </div>
+                        `;
+                    }
+                }
+            });
+
+            // Show recent mistakes with explanations
+            const recentMistakeEntries = gameState.sessionHistory
+                .filter(entry => !entry.isCorrect)
+                .slice(-5)
+                .reverse();
+
+            if (recentMistakeEntries.length > 0) {
+                mistakesHtml += '<div style="margin-bottom: 10px;">Most recent mistakes:</div>';
+                recentMistakeEntries.forEach(entry => {
+                    mistakesHtml += `
+                        <div class="problem-tag error" style="margin-bottom: 8px;">
+                            ${entry.problem.table} × ${entry.problem.multiplier} = ${entry.problem.answer}
+                            <br>
+                            <small>Response time: ${entry.responseTime.toFixed(1)}s</small>
+                        </div>
+                    `;
+                });
+            } else {
+                mistakesHtml += '<div class="problem-tag mastered">No mistakes in this session! 🎉</div>';
+            }
+
+            strugglingTables.innerHTML = struggleHtml;
+            speedImprovements.innerHTML = speedHtml;
+            recentMistakes.innerHTML = mistakesHtml;
+
+            // Add trend analysis
+            const recentSessions = gameState.userStats.history.slice(-10);
+            const accuracyTrend = document.getElementById('accuracyTrend');
+            drawAccuracyTrend(accuracyTrend, recentSessions);
+
+            // Update speed chart
+            updateSpeedChart();
+
+            // Generate recommendations
+            generateRecommendations();
+
+            // Update mastery progress
+            updateMasteryProgress();
+        }
+
+        function drawAccuracyTrend(canvas, sessions) {
+            // Implementation of trend chart drawing
+            // (Using Canvas API or a charting library like Chart.js)
+        }
+
+        function updateSpeedChart() {
+            const avgSpeed = gameState.sessionHistory.reduce((sum, entry) => 
+                sum + entry.responseTime, 0) / gameState.sessionHistory.length;
+            
+            document.getElementById('avgSpeed').textContent = 
+                `Average: ${avgSpeed.toFixed(1)}s`;
+        }
+
+        function updateMasteryProgress() {
+            const totalPairs = 144; // 12x12
+            const masteredCount = Object.values(gameState.problemStats)
+                .filter(stats => stats.mastered).length;
+            
+            document.getElementById('masteryProgress').textContent = 
+                `${masteredCount}/${totalPairs} pairs mastered`;
+        }
+
+        function generateRecommendations() {
+            const recommendations = document.getElementById('recommendations');
+            let html = '';
+
+            // Analyze patterns and generate personalized recommendations
+            const weakTables = findWeakTables();
+            const speedIssues = findSpeedIssues();
+            const nextMilestone = calculateNextMilestone();
+
+            if (weakTables.length > 0) {
+                html += `<p>📚 Focus on the ${weakTables.join(', ')} times tables</p>`;
+            }
+
+            if (speedIssues.length > 0) {
+                html += `<p>⚡ Practice quick recall of ${speedIssues.join(', ')}</p>`;
+            }
+
+            html += `<p>🎯 Next milestone: ${nextMilestone}</p>`;
+            
+            recommendations.innerHTML = html;
+        }
+
+        function findWeakTables() {
+            const weakTables = [];
+            const tableAccuracy = {};
+
+            // Calculate accuracy for each table
+            for (let i = 1; i <= 12; i++) {
+                let correct = 0;
+                let total = 0;
+                for (let j = 1; j <= 12; j++) {
+                    const stats = getProblemStats({ table: i, multiplier: j });
+                    correct += stats.correct;
+                    total += stats.correct + stats.incorrect;
+                }
+                if (total > 0) {
+                    const accuracy = (correct / total) * 100;
+                    tableAccuracy[i] = accuracy;
+                    if (accuracy < 80) {
+                        weakTables.push(`${i}×`);
+                    }
+                }
+            }
+            return weakTables;
+        }
+
+        function findSpeedIssues() {
+            const slowPairs = [];
+            for (const [key, stats] of Object.entries(gameState.problemStats)) {
+                if (stats.averageResponseTime > 5) {
+                    slowPairs.push(key);
+                }
+            }
+            return slowPairs.slice(0, 3); // Return top 3 slowest pairs
+        }
+
+        function calculateNextMilestone() {
+            const masteredCount = Object.values(gameState.problemStats)
+                .filter(stats => stats.mastered).length;
+            
+            if (masteredCount < 36) {
+                return "Master your first quarter of multiplication pairs";
+            } else if (masteredCount < 72) {
+                return "Reach 50% mastery of multiplication pairs";
+            } else if (masteredCount < 108) {
+                return "Master three quarters of multiplication pairs";
+            } else if (masteredCount < 144) {
+                return "Complete mastery of all multiplication pairs";
+            } else {
+                return "Maintain speed and accuracy across all tables";
+            }
+        }
+
+        // User management functions
+        function loginUser(username) {
+            gameState.currentUser = username;
+            loadUserStats();
+            updateUserProfile();
+            showScreen('start');
+        }
+
+        function loadUserStats() {
+            const savedStats = localStorage.getItem(`mathStats_${gameState.currentUser}`);
+            if (savedStats) {
+                gameState.userStats = JSON.parse(savedStats);
+            }
+            
+            // Load problem stats for the user
+            const savedProblemStats = localStorage.getItem(`mathProblemStats_${gameState.currentUser}`);
+            if (savedProblemStats) {
+                gameState.problemStats = JSON.parse(savedProblemStats);
+            }
+        }
+
+        function saveUserStats() {
+            if (!gameState.currentUser) return;
+            
+            localStorage.setItem(
+                `mathStats_${gameState.currentUser}`,
+                JSON.stringify(gameState.userStats)
+            );
+            
+            localStorage.setItem(
+                `mathProblemStats_${gameState.currentUser}`,
+                JSON.stringify(gameState.problemStats)
+            );
+        }
+
+        function updateUserProfile() {
+            const avatar = document.querySelector('.user-avatar');
+            const displayName = document.getElementById('userDisplayName');
+            const totalSolved = document.getElementById('totalSolved');
+            const logoutButton = document.getElementById('logoutButton');
+
+            avatar.textContent = gameState.currentUser.charAt(0).toUpperCase();
+            displayName.textContent = `Welcome back, ${gameState.currentUser}!`;
+            totalSolved.textContent = gameState.userStats.totalSolved;
+            
+            // Make logout button more visible
+            logoutButton.style.backgroundColor = 'var(--warning-color)';
+            logoutButton.style.color = 'var(--dark-color)';
+            logoutButton.style.fontWeight = 'bold';
+        }
+
+        // Event Listeners
+        document.getElementById('loginButton').addEventListener('click', () => {
+            const username = document.getElementById('username').value.trim();
+            if (username) {
+                loginUser(username);
+            }
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            saveUserStats();
+            gameState.currentUser = null;
+            showScreen('loginScreen');
+        });
+
+        // Add focus practice button handler
+        document.getElementById('focusPracticeButton').addEventListener('click', () => {
+            // Pre-select weak areas and slow problems
+            const checkboxes = document.querySelectorAll('#tablesCheckboxes input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                const table = parseInt(checkbox.value);
+                const hasWeakProblems = Array.from(gameState.weakAreas)
+                    .some(key => key.startsWith(`${table}x`));
+                const hasSlowProblems = Array.from(gameState.slowProblems)
+                    .some(key => key.startsWith(`${table}x`));
+                checkbox.checked = hasWeakProblems || hasSlowProblems;
+            });
+            
+            // Set shorter practice duration
+            document.getElementById('timerMinutes').value = '5';
+            document.getElementById('questionTarget').value = '20';
+            
+            showScreen('start');
+        });
+
+        // Add keyboard shortcut for logout
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && gameState.currentScreen === 'start') {
+                document.getElementById('logoutButton').click();
+            }
+        });
+
+        // Initialize the app
+        initializeCheckboxes();
+    </script>
+</body>
+</html>
