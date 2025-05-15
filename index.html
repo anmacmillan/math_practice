@@ -1,319 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Math Super Star Adventure! 🚀</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Times-Tables Super Star 🚀</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #ff6b6b;
+      --primary-dark: #e55b5b;
+      --primary-light: #ff8080;
+      --secondary: #4ecdc4;
+      --secondary-dark: #45b3ab;
+      --secondary-light: #65d8d2;
+      --success: #54d65b;
+      --danger: #ff4757;
+      --warning: #ffa500;
+      --gray: #95a5a6;
+      --gray-dark: #7f8c8d;
+      --background: #f7f9fc;
+      --font-main: "Nunito", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      --radius: 12px;
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --trans: 0.3s;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:var(--font-main);
+      background:var(--background);
+      color:#2c3a47;line-height:1.6;
+      display:flex;flex-direction:column;min-height:100vh;padding:20px;
+    }
+    .container{max-width:900px;width:100%;margin:0 auto;padding:25px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)}
+    h1{font-size:2.8rem;font-weight:900;color:var(--primary);text-align:center;text-shadow:2px 2px 0 var(--primary-light)}
+    h2{font-size:2rem;font-weight:700;color:var(--secondary);margin-bottom:20px;text-align:center}
+    .subheading{text-align:center;color:var(--gray);margin-bottom:25px;font-size:1.2rem}
 
-<style>
-:root{
-    /* ==== core palette ==== */
-    --primary-color:        #FF6B6B;
-    --primary-color-light:  #FF8080; /* +5 % */
-    --primary-color-dark:   #E55B5B; /* −10 % */
+    /* screens */
+    .screen{display:none;text-align:center}
+    .screen.active{display:block;animation:fadeIn .4s}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-    --secondary-color:      #4ECDC4;
-    --secondary-color-light:#65D8D2;
-    --secondary-color-dark: #45B3AB;
+    /* buttons */
+    .btn{padding:14px 28px;font-size:1.2rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border:none;border-radius:var(--radius);cursor:pointer;transition:all var(--trans);color:#fff;background:var(--primary);box-shadow:0 4px 0 var(--primary-dark),0 6px 10px rgba(0,0,0,.1)}
+    .btn:hover{background:var(--primary-light);transform:translateY(-2px);box-shadow:0 6px 0 var(--primary-dark),0 8px 12px rgba(0,0,0,.15)}
+    .btn-secondary{background:var(--secondary);box-shadow:0 4px 0 var(--secondary-dark),0 6px 10px rgba(0,0,0,.1)}
+    .btn-secondary:hover{background:var(--secondary-light)}
+    .btn-sm{padding:8px 16px;font-size:.9rem}
 
-    --warning-color:        #FFA500;
-    --warning-color-light:  #FFB733;
-    --warning-color-dark:   #CC8400;
+    /* problem display */
+    .problem-display{font-size:clamp(2.5rem,10vw,4rem);font-weight:900;background:var(--secondary-light);padding:15px 25px;border-radius:var(--radius);display:inline-block;margin:30px 0}
+    .progress{margin:10px 0;font-size:1.1rem;color:var(--gray-dark)}
 
-    --danger-color:         #FF4757;
-    --danger-color-light:   #FF5E6B;
-    --danger-color-dark:    #CC3B49;
+    /* input */
+    .answer-form{display:flex;justify-content:center;gap:15px;margin:20px 0}
+    .answer-input{font-size:2rem;font-weight:700;width:180px;text-align:center;padding:12px;border:3px solid #e0e0e0;border-radius:var(--radius);box-shadow:inset 0 2px 4px rgba(0,0,0,.06);transition:border-color var(--trans),box-shadow var(--trans)}
+    .answer-input:focus{outline:none;border-color:var(--warning);box-shadow:0 0 0 4px rgba(255,165,0,.4)}
 
-    --gray-color:           #95A5A6;
-    --gray-color-dark:      #7F8C8D;
+    /* feedback */
+    .feedback{min-height:70px;margin:20px 0;font-size:1.4rem;font-weight:700;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity var(--trans),transform var(--trans)}
+    .feedback.visible{opacity:1}
+    .feedback.correct{background:var(--success);color:#fff}
+    .feedback.incorrect{background:var(--danger);color:#fff}
 
-    --success-color:        #54D65B;
+    /* settings */
+    .settings-panel{background:var(--primary-light);padding:20px;border-radius:var(--radius);margin-top:20px}
+    .checkbox-group{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:15px 0}
+    .checkbox-item{background:#fff;border-radius:20px;padding:8px 14px;display:flex;align-items:center;gap:6px;box-shadow:0 2px 5px rgba(0,0,0,.08)}
+    .checkbox-item input{width:18px;height:18px}
+    .number-input{margin-top:10px;display:flex;justify-content:center;gap:6px;font-size:1rem}
+    .number-input input{width:80px;text-align:center;padding:6px;border:2px solid var(--secondary);border-radius:var(--radius)}
 
-    --primary-light:  #FFD1D1;
-    --secondary-light:#A0E7E5;
-    --accent-color:   #FFD93D;
-    --dark-color:     #2C3A47;
-    --light-color:    #FFFFFF;
-    --background-color:#F7F9FC;
-
-    --font-main:"Nunito","Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
-    --border-radius:12px;
-    --box-shadow:0 5px 15px rgba(0,0,0,0.1);
-    --transition-speed:0.3s;
-}
-
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-    font-family:var(--font-main);
-    background-color:var(--background-color);
-    background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E0E7FF' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    color:var(--dark-color);
-    line-height:1.6;
-    display:flex;
-    flex-direction:column;
-    min-height:100vh;
-    padding:20px;
-}
-
-.container{
-    max-width:800px;width:100%;margin:0 auto;
-    padding:25px;
-    background-color:var(--light-color);
-    border-radius:var(--border-radius);
-    box-shadow:var(--box-shadow);
-}
-
-/* ---------- headings ---------- */
-header{text-align:center;margin-bottom:30px;}
-h1{
-    color:var(--primary-color);margin-bottom:10px;
-    font-size:2.8rem;font-weight:900;
-    text-shadow:2px 2px 0 var(--primary-light);
-}
-h2{color:var(--secondary-color);margin-bottom:20px;font-size:2rem;font-weight:700;}
-h3{color:var(--dark-color);margin-bottom:15px;font-size:1.6rem;}
-.subheading{color:var(--gray-color);font-size:1.3rem;margin-bottom:25px;}
-
-/* ---------- screens ---------- */
-.screen{display:none;text-align:center;}
-.screen.active{display:block;animation:fadeIn 0.5s ease-out;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-
-/* ---------- game area ---------- */
-.problem-display{
-    font-size:clamp(2.5rem,10vw,4rem);
-    margin:30px 0;font-weight:900;color:var(--dark-color);
-    padding:15px;background-color:var(--secondary-light);
-    border-radius:var(--border-radius);display:inline-block;
-}
-.problem-display.animate{animation:pulseProblem 0.6s cubic-bezier(0.68,-0.55,0.27,1.55);}
-@keyframes pulseProblem{0%{transform:scale(1);}50%{transform:scale(1.15);}100%{transform:scale(1);}}
-
-/* ---------- form ---------- */
-.answer-form{display:flex;justify-content:center;gap:15px;margin:25px 0;}
-.answer-input{
-    padding:15px 20px;font-size:2rem;font-weight:700;
-    border:3px solid #e0e0e0;border-radius:var(--border-radius);
-    width:180px;text-align:center;
-    transition:border-color var(--transition-speed),box-shadow var(--transition-speed);
-    box-shadow:inset 0 2px 4px rgba(0,0,0,0.06);
-}
-.answer-input:focus{
-    outline:none;border-color:var(--accent-color);
-    box-shadow:0 0 0 4px rgba(255,217,61,0.5);
-}
-
-/* ---------- buttons ---------- */
-.btn{
-    padding:15px 30px;font-size:1.4rem;font-weight:700;
-    color:#fff;border:none;border-radius:var(--border-radius);cursor:pointer;
-    text-transform:uppercase;letter-spacing:1px;
-    background-image:linear-gradient(to bottom,var(--primary-color),var(--primary-color-dark));
-    box-shadow:0 4px 0 var(--primary-color-dark),0 6px 10px rgba(0,0,0,0.1);
-    transition:all var(--transition-speed) ease-out;
-}
-.btn:hover{
-    background-image:linear-gradient(to bottom,var(--primary-color-light),var(--primary-color));
-    transform:translateY(-2px);
-    box-shadow:0 6px 0 var(--primary-color-dark),0 8px 12px rgba(0,0,0,0.15);
-}
-.btn:active{transform:translateY(1px);box-shadow:0 2px 0 var(--primary-color-dark),0 4px 8px rgba(0,0,0,0.1);}
-.btn:disabled{
-    background-image:linear-gradient(to bottom,var(--gray-color),var(--gray-color-dark));
-    box-shadow:0 4px 0 var(--gray-color-dark);
-    cursor:not-allowed;transform:none;
-}
-
-/* colour variants */
-.btn-secondary{
-    background-image:linear-gradient(to bottom,var(--secondary-color),var(--secondary-color-dark));
-    box-shadow:0 4px 0 var(--secondary-color-dark),0 6px 10px rgba(0,0,0,0.1);
-}
-.btn-secondary:hover{
-    background-image:linear-gradient(to bottom,var(--secondary-color-light),var(--secondary-color));
-    box-shadow:0 6px 0 var(--secondary-color-dark),0 8px 12px rgba(0,0,0,0.15);
-}
-.btn-warning{
-    background-image:linear-gradient(to bottom,var(--warning-color),var(--warning-color-dark));
-    color:var(--dark-color);
-    box-shadow:0 4px 0 var(--warning-color-dark),0 6px 10px rgba(0,0,0,0.1);
-}
-.btn-warning:hover{
-    background-image:linear-gradient(to bottom,var(--warning-color-light),var(--warning-color));
-    box-shadow:0 6px 0 var(--warning-color-dark),0 8px 12px rgba(0,0,0,0.15);
-}
-.btn-danger{
-    background-image:linear-gradient(to bottom,var(--danger-color),var(--danger-color-dark));
-    box-shadow:0 4px 0 var(--danger-color-dark),0 6px 10px rgba(0,0,0,0.1);
-}
-.btn-danger:hover{
-    background-image:linear-gradient(to bottom,var(--danger-color-light),var(--danger-color));
-    box-shadow:0 6px 0 var(--danger-color-dark),0 8px 12px rgba(0,0,0,0.15);
-}
-.btn-sm{padding:8px 15px;font-size:1rem;}
-
-/* ---------- feedback ---------- */
-.feedback{
-    text-align:center;margin:25px 0;padding:20px;border-radius:var(--border-radius);
-    font-size:1.5rem;font-weight:700;opacity:0;min-height:70px;
-    display:flex;align-items:center;justify-content:center;gap:10px;
-    transform:scale(0.9);
-    transition:opacity var(--transition-speed),transform var(--transition-speed),background-color var(--transition-speed),color var(--transition-speed);
-}
-.feedback.visible{opacity:1;transform:scale(1);}
-.feedback.correct{
-    background-color:var(--success-color);color:var(--light-color);
-    box-shadow:0 0 15px rgba(84,214,91,0.5);
-}
-.feedback.correct::before{content:'🥳';font-size:1.8rem;}
-.feedback.incorrect{
-    background-color:var(--danger-color);color:var(--light-color);
-    box-shadow:0 0 15px rgba(255,71,87,0.5);
-}
-.feedback.incorrect::before{content:'🤔';font-size:1.8rem;}
-.shake{animation:shakeHorizontal 0.5s cubic-bezier(.36,.07,.19,.97) both;}
-@keyframes shakeHorizontal{
-    10%,90%{transform:translateX(-2px);}20%,80%{transform:translateX(4px);}
-    30%,50%,70%{transform:translateX(-6px);}40%,60%{transform:translateX(6px);}
-}
-
-/* ---------- settings panel ---------- */
-.settings-panel{
-    background-color:var(--primary-light);
-    border-radius:var(--border-radius);
-    padding:25px;margin:20px auto;max-width:600px;
-}
-.settings-panel h3{color:var(--primary-color);text-align:center;margin-bottom:20px;}
-.checkbox-group{display:flex;flex-wrap:wrap;gap:15px;margin:20px 0;justify-content:center;}
-.checkbox-item{
-    display:flex;align-items:center;
-    background-color:var(--light-color);padding:10px 15px;border-radius:20px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.08);transition:all var(--transition-speed);
-}
-.checkbox-item:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.12);}
-.checkbox-item input[type="checkbox"]{
-    margin-right:8px;width:20px;height:20px;
-}
-</style>
+    /* stats grid */
+    .grid{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-top:20px}
+    .cell{padding:8px 4px;border-radius:6px;font-size:.8rem;color:#fff}
+    .box-0{background:var(--danger)}
+    .box-1{background:#f66d0a}
+    .box-2{background:var(--warning)}
+    .box-3{background:#9bc53d}
+    .box-4{background:var(--success)}
+    .box-na{background:var(--gray);opacity:.4}
+  </style>
 </head>
-
 <body>
-<div class="container">
-
+  <div class="container">
     <header>
-        <h1>Math Super Star Adventure! 🚀</h1>
-        <p class="subheading">Answer quickly to collect stars!</p>
+      <h1>Times-Tables Super Star 🚀</h1>
+      <p class="subheading">Master 2 × to 10 × with smart repetition</p>
     </header>
 
-    <!-- ===== START SCREEN ===== -->
+    <!-- Start Screen -->
     <section id="start-screen" class="screen active">
-        <button id="start-btn" class="btn btn-secondary">Start Game</button>
-    </section>
-
-    <!-- ===== GAME SCREEN ===== -->
-    <section id="game-screen" class="screen">
-        <div id="problem" class="problem-display"></div>
-
-        <form id="answer-form" class="answer-form">
-            <input id="answer-input" type="number" class="answer-input" autocomplete="off" />
-            <button type="submit" class="btn">Submit</button>
-        </form>
-
-        <div id="feedback" class="feedback"></div>
-    </section>
-
-    <!-- ===== END SCREEN ===== -->
-    <section id="end-screen" class="screen">
-        <h2>Game Over!</h2>
-        <p id="score-display"></p>
-        <button id="restart-btn" class="btn btn-secondary">Play Again</button>
-    </section>
-
-    <!-- ===== SETTINGS ===== -->
-    <div class="settings-panel">
-        <h3>Game Settings</h3>
-        <div class="checkbox-group">
-            <label class="checkbox-item"><input type="checkbox" id="addition" checked> Addition</label>
-            <label class="checkbox-item"><input type="checkbox" id="subtraction" checked> Subtraction</label>
-            <label class="checkbox-item"><input type="checkbox" id="multiplication"> Multiplication</label>
-            <label class="checkbox-item"><input type="checkbox" id="division"> Division</label>
+      <h2>Choose your practice</h2>
+      <div class="settings-panel">
+        <h3>Select tables</h3>
+        <div class="checkbox-group" id="table-select"></div>
+        <div class="number-input">
+          <label for="num-questions">Questions:</label>
+          <input type="number" id="num-questions" value="20" min="5" max="200" />
         </div>
-    </div>
+      </div>
+      <button id="start-btn" class="btn">Start</button>
+      <button id="stats-btn" class="btn btn-secondary btn-sm">Stats</button>
+    </section>
 
-</div>
+    <!-- Game Screen -->
+    <section id="game-screen" class="screen">
+      <div class="progress" id="progress">Question 1 / 20</div>
+      <div id="problem" class="problem-display"></div>
+      <form id="answer-form" class="answer-form" autocomplete="off">
+        <input type="number" id="answer-input" class="answer-input" />
+        <button class="btn" type="submit">OK</button>
+      </form>
+      <div id="feedback" class="feedback"></div>
+    </section>
 
-<!-- ===== 40-line demo script: remove if you have your own game logic ===== -->
-<script>
-const qs = id => document.getElementById(id);
+    <!-- End Screen -->
+    <section id="end-screen" class="screen">
+      <h2>Great work!</h2>
+      <p id="summary"></p>
+      <div id="tricky-list"></div>
+      <button id="new-session" class="btn">New Session</button>
+    </section>
 
-/* screen elements */
-const startScr = qs('start-screen'),
-      gameScr  = qs('game-screen'),
-      endScr   = qs('end-screen');
+    <!-- Stats Screen -->
+    <section id="stats-screen" class="screen">
+      <h2>Your Progress</h2>
+      <div id="stats-grid" class="grid"></div>
+      <button id="back-home" class="btn btn-secondary btn-sm" style="margin-top:20px">Back</button>
+    </section>
+  </div>
 
-const startBtn   = qs('start-btn'),
-      restartBtn = qs('restart-btn'),
-      problemEl  = qs('problem'),
-      form       = qs('answer-form'),
-      input      = qs('answer-input'),
-      feedback   = qs('feedback'),
-      scoreEl    = qs('score-display');
+  <script>
+    /* ------------------ constants ------------------ */
+    const BOX_DELAYS = [0, 1, 3, 7, 15]; // days until next due
+    const MAX_BOX = BOX_DELAYS.length - 1;
+    const STORAGE_KEY = 'ttStats-v1';
 
-let score = 0, answer = 0, timerId;
+    /* ------------------ helpers ------------------ */
+    const $ = id => document.getElementById(id);
+    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const today = () => new Date().setHours(0, 0, 0, 0);
 
-/* helpers */
-const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    /* ------------------ state ------------------ */
+    let stats = loadStats();
+    let queue = [];
+    let current = null;
+    let totalQuestions = 20;
+    let asked = 0;
 
-function nextProblem() {
-    const a = rand(1, 10), b = rand(1, 10);
-    answer = a + b;                         // only addition for demo
-    problemEl.textContent = `${a} + ${b}`;
-    problemEl.classList.add('animate');
-    setTimeout(() => problemEl.classList.remove('animate'), 600);
-}
-
-function startGame() {
-    score = 0;
-    startScr.classList.remove('active');
-    endScr.classList.remove('active');
-    gameScr.classList.add('active');
-    nextProblem();
-    input.value = '';
-    input.focus();
-
-    /* 60-second round */
-    clearTimeout(timerId);
-    timerId = setTimeout(endGame, 60000);
-}
-
-function endGame() {
-    gameScr.classList.remove('active');
-    endScr.classList.add('active');
-    scoreEl.textContent = `Your Score: ${score}`;
-    clearTimeout(timerId);
-}
-
-form.addEventListener('submit', e => {
-    e.preventDefault();
-    const val = Number(input.value);
-    if (val === answer) {
-        score++;
-        feedback.textContent = 'Correct!';
-        feedback.className = 'feedback visible correct';
-        nextProblem();
-    } else {
-        feedback.textContent = 'Try again!';
-        feedback.className = 'feedback visible incorrect shake';
-        setTimeout(() => feedback.classList.remove('shake'), 500);
+    /* ------------------ init UI ------------------ */
+    const tableSelect = $('table-select');
+    for (let n = 2; n <= 10; n++) {
+      const label = document.createElement('label');
+      label.className = 'checkbox-item';
+      label.innerHTML = `<input type="checkbox" value="${n}" checked> ${n}×`;
+      tableSelect.appendChild(label);
     }
-    input.value = '';
-    input.focus();
-});
 
-startBtn.addEventListener('click', startGame);
-restartBtn.addEventListener('click', () => { startScr.classList.add('active'); endScr.classList.remove('active'); });
-</script>
+    /* screen controls */
+    const screens = {
+      start: $('start-screen'),
+      game: $('game-screen'),
+      end: $('end-screen'),
+      stats: $('stats-screen')
+    };
+    function show(name) {
+      Object.values(screens).forEach(s => s.classList.remove('active'));
+      screens[name].classList.add('active');
+    }
+
+    /* ------------------ storage ------------------ */
+    function loadStats() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+    function saveStats() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+    }
+
+    /* ------------------ fact helpers ------------------ */
+    function factKey(a, b) { return `${a}x${b}`; }
+    function getFact(a, b) {
+      const key = factKey(a, b);
+      if (!stats[key]) stats[key] = { box: 0, next: 0, correct: 0, attempts: 0 };
+      return stats[key];
+    }
+    function schedule(fact, correct) {
+      fact.attempts++;
+      if (correct) {
+        fact.correct++;
+        fact.box = Math.min(fact.box + 1, MAX_BOX);
+      } else {
+        fact.box = 0;
+      }
+      fact.next = today() + BOX_DELAYS[fact.box] * 86400000;
+    }
+    function isDue(fact) {
+      return fact.next <= today();
+    }
+
+    /* ------------------ session creation ------------------ */
+    function buildQueue(selectedTables) {
+      const allFacts = [];
+      selectedTables.forEach(a => {
+        for (let b = 1; b <= 10; b++) allFacts.push([a, b]);
+      });
+      const dueFacts = allFacts.filter(([a, b]) => isDue(getFact(a, b)));
+      const pool = dueFacts.length ? dueFacts : allFacts;
+      const q = [];
+      while (q.length < totalQuestions) {
+        const pair = pool[rand(0, pool.length - 1)];
+        q.push(pair);
+      }
+      return q;
+    }
+
+    /* ------------------ gameplay ------------------ */
+    function nextQuestion() {
+      if (asked === totalQuestions) return finishSession();
+      current = queue.shift();
+      if (!current) return finishSession();
+      const [a, b] = current;
+      $('problem').textContent = `${a} × ${b}`;
+      $('answer-input').value = '';
+      $('answer-input').focus();
+      $('progress').textContent = `Question ${asked + 1} / ${totalQuestions}`;
+      $('feedback').className = 'feedback';
+    }
+    function submitAnswer(e) {
+      e.preventDefault();
+      const val = Number($('answer-input').value);
+      const [a, b] = current;
+      const correctAns = a * b;
+      const fact = getFact(a, b);
+      const correct = val === correctAns;
+      schedule(fact, correct);
+      saveStats();
+      $('feedback').textContent = correct ? 'Correct!' : `Oops… ${correctAns}`;
+      $('feedback').className = `feedback visible ${correct ? 'correct' : 'incorrect'}`;
+      asked++;
+      // reinsert incorrectly answered soon
+      if (!correct) queue.splice(2, 0, current);
+      setTimeout(nextQuestion, 800);
+    }
+
+    function finishSession() {
+      show('end');
+      const accuracy = Math.round((asked ? countCorrect(queue) : 0) * 100 / asked);
+      $('summary').textContent = `You answered ${asked} questions at ${accuracy}% accuracy.`;
+      renderTrickyFacts();
+    }
+    function countCorrect(list) {return asked - list.length;}
+
+    /* ------------------ tricky facts list ------------------ */
+    function renderTrickyFacts() {
+      const tricky = Object.entries(stats)
+        .map(([k, v]) => ({ key: k, rate: v.attempts ? v.correct / v.attempts : 1 }))
+        .filter(o => o.attempts !== 0 && o.rate < 0.8)
+        .sort((a, b) => a.rate - b.rate)
+        .slice(0, 10);
+      const div = $('tricky-list');
+      div.innerHTML = '';
+      if (!tricky.length) { div.textContent = 'No tricky facts – great job!'; return; }
+      const ul = document.createElement('ul');
+      tricky.forEach(o => {
+        const li = document.createElement('li');
+        const [a,b] = o.key.split('x');
+        li.textContent = `${a} × ${b} (accuracy ${(o.rate*100)|0}%)`;
+        ul.appendChild(li);
+      });
+      div.appendChild(ul);
+    }
+
+    /* ------------------ stats screen ------------------ */
+    function renderStatsGrid() {
+      const grid = $('stats-grid');
+      grid.innerHTML = '';
+      for (let a = 2; a <= 10; a++) {
+        for (let b = 1; b <= 10; b++) {
+          const fact = getFact(a, b);
+          const cell = document.createElement('div');
+          cell.className = 'cell ' + (fact.attempts ? `box-${fact.box}` : 'box-na');
+          cell.textContent = `${a}×${b}`;
+          grid.appendChild(cell);
+        }
+      }
+    }
+
+    /* ------------------ event wiring ------------------ */
+    $('start-btn').onclick = () => {
+      const checked = [...tableSelect.querySelectorAll('input:checked')].map(i => Number(i.value));
+      if (!checked.length) { alert('Please choose at least one table'); return; }
+      totalQuestions = Math.min(Math.max(5, $('num-questions').value|0), 200);
+      queue = buildQueue(checked);
+      asked = 0;
+      show('game');
+      nextQuestion();
+    };
+    $('answer-form').addEventListener('submit', submitAnswer);
+    $('new-session').onclick = () => show('start');
+    $('stats-btn').onclick = () => { renderStatsGrid(); show('stats'); };
+    $('back-home').onclick = () => show('start');
+  </script>
 </body>
 </html>
