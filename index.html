@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Super Star Adventure! 🚀</title> {/* AWESOME Title */}
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet"> {/* AWESOME Font */}
+    <title>Math Super Star Adventure! 🚀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* AWESOME Color Palette - Brighter & More Playful */
             --primary-color: #FF6B6B; /* Bright Coral */
             --primary-light: #FFD1D1;
             --secondary-color: #4ECDC4; /* Aqua */
@@ -20,7 +19,7 @@
             --light-color: #FFFFFF;
             --gray-color: #95A5A6; /* Lighter Gray */
             --background-color: #F7F9FC; /* Light, friendly background */
-            --font-main: "Nunito", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* AWESOME Font */
+            --font-main: "Nunito", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             --border-radius: 12px; /* Softer radius */
             --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             --transition-speed: 0.3s;
@@ -36,7 +35,6 @@
         body {
             font-family: var(--font-main);
             background-color: var(--background-color);
-            /* AWESOME: Add a subtle, fun background pattern */
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E0E7FF' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             color: var(--dark-color);
             line-height: 1.6;
@@ -122,7 +120,7 @@
             animation: pulseProblem 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncier pulse */
         }
 
-        @keyframes pulseProblem { /* AWESOME Pulse */
+        @keyframes pulseProblem {
             0% { transform: scale(1); }
             50% { transform: scale(1.15); }
             100% { transform: scale(1); }
@@ -155,7 +153,6 @@
             box-shadow: 0 0 0 4px rgba(255, 217, 61, 0.5); /* Focus glow */
         }
 
-        /* AWESOME Buttons */
         .btn {
             padding: 15px 30px; /* Bigger buttons */
             font-size: 1.4rem; /* Bigger text */
@@ -181,7 +178,6 @@
             box-shadow: 0 2px 0 darken(var(--primary-color), 15%), 0 4px 8px rgba(0,0,0,0.1);
         }
 
-
         .btn:disabled {
             background-image: linear-gradient(to bottom, var(--gray-color), darken(var(--gray-color), 10%));
             cursor: not-allowed;
@@ -200,7 +196,6 @@
          .btn-secondary:active {
             box-shadow: 0 2px 0 darken(var(--secondary-color), 15%), 0 4px 8px rgba(0,0,0,0.1);
         }
-
 
         .btn-warning {
             background-image: linear-gradient(to bottom, var(--warning-color), darken(var(--warning-color), 10%));
@@ -232,7 +227,6 @@
             font-size: 1rem;
         }
 
-        /* AWESOME Feedback Area */
         .feedback {
             text-align: center;
             margin: 25px 0;
@@ -260,7 +254,7 @@
             color: var(--light-color);
             box-shadow: 0 0 15px rgba(84, 214, 91, 0.5);
         }
-        .feedback.correct::before { /* AWESOME: Add a checkmark icon */
+        .feedback.correct::before {
             content: '🥳'; /* Or use an SVG/FontAwesome icon */
             font-size: 1.8rem;
         }
@@ -270,12 +264,12 @@
             color: var(--light-color);
             box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
         }
-        .feedback.incorrect::before { /* AWESOME: Add a cross icon */
+        .feedback.incorrect::before {
             content: '🤔'; /* Or use an SVG/FontAwesome icon */
             font-size: 1.8rem;
         }
 
-        .shake { /* AWESOME Shake Animation */
+        .shake {
             animation: shakeHorizontal 0.5s cubic-bezier(.36,.07,.19,.97) both;
         }
 
@@ -285,7 +279,6 @@
             30%, 50%, 70% { transform: translateX(-6px); }
             40%, 60% { transform: translateX(6px); }
         }
-
 
         /* Settings Panel */
         .settings-panel {
