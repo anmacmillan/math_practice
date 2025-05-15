@@ -1,339 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Super Star Adventure! 🚀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #FF6B6B; /* Bright Coral */
-            --primary-light: #FFD1D1;
-            --secondary-color: #4ECDC4; /* Aqua */
-            --secondary-light: #A0E7E5;
-            --accent-color: #FFD93D; /* Sunny Yellow */
-            --success-color: #54D65B; /* Bright Green */
-            --danger-color: #FF4757; /* Bright Red */
-            --warning-color: #FFA500; /* Orange */
-            --dark-color: #2C3A47; /* Dark Slate */
-            --light-color: #FFFFFF;
-            --gray-color: #95A5A6; /* Lighter Gray */
-            --background-color: #F7F9FC; /* Light, friendly background */
-            --font-main: "Nunito", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            --border-radius: 12px; /* Softer radius */
-            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            --transition-speed: 0.3s;
-            --star-color: #FFD700; /* Gold for stars */
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Super Star Adventure! 🚀</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+:root{
+    /* ==== core palette ==== */
+    --primary-color:        #FF6B6B;
+    --primary-color-light:  #FF8080; /* +5 % */
+    --primary-color-dark:   #E55B5B; /* −10 % */
 
-        body {
-            font-family: var(--font-main);
-            background-color: var(--background-color);
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E0E7FF' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            color: var(--dark-color);
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding: 20px;
-            transition: background-color var(--transition-speed); /* For theme changes */
-        }
+    --secondary-color:      #4ECDC4;
+    --secondary-color-light:#65D8D2;
+    --secondary-color-dark: #45B3AB;
 
-        .container {
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 25px; /* Slightly more padding */
-            background-color: var(--light-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
+    --warning-color:        #FFA500;
+    --warning-color-light:  #FFB733;
+    --warning-color-dark:   #CC8400;
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    --danger-color:         #FF4757;
+    --danger-color-light:   #FF5E6B;
+    --danger-color-dark:    #CC3B49;
 
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 2.8rem; /* Bigger */
-            font-weight: 900; /* Bolder for Nunito */
-            text-shadow: 2px 2px 0px var(--primary-light); /* Fun text shadow */
-        }
+    --gray-color:           #95A5A6;
+    --gray-color-dark:      #7F8C8D;
 
-        h2 {
-            color: var(--secondary-color);
-            margin-bottom: 20px;
-            font-size: 2rem;
-            font-weight: 700;
-        }
+    --success-color:        #54D65B;
 
-        h3 {
-            color: var(--dark-color);
-            margin-bottom: 15px;
-            font-size: 1.6rem;
-        }
+    --primary-light:  #FFD1D1;
+    --secondary-light:#A0E7E5;
+    --accent-color:   #FFD93D;
+    --dark-color:     #2C3A47;
+    --light-color:    #FFFFFF;
+    --background-color:#F7F9FC;
 
-        .subheading {
-            color: var(--gray-color);
-            font-size: 1.3rem; /* Larger */
-            margin-bottom: 25px;
-        }
+    --font-main:"Nunito","Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+    --border-radius:12px;
+    --box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    --transition-speed:0.3s;
+}
 
-        /* Screens */
-        .screen {
-            display: none;
-            text-align: center; /* Center content in screens */
-        }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-        .screen.active {
-            display: block;
-            animation: fadeIn 0.5s ease-out;
-        }
+body{
+    font-family:var(--font-main);
+    background-color:var(--background-color);
+    background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23E0E7FF' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    color:var(--dark-color);
+    line-height:1.6;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    padding:20px;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+.container{
+    max-width:800px;width:100%;margin:0 auto;
+    padding:25px;
+    background-color:var(--light-color);
+    border-radius:var(--border-radius);
+    box-shadow:var(--box-shadow);
+}
 
-        /* Main Game Screen */
-        .problem-display {
-            font-size: clamp(2.5rem, 10vw, 4rem); /* Responsive font size */
-            text-align: center;
-            margin: 30px 0;
-            font-weight: 900;
-            color: var(--dark-color);
-            padding: 15px;
-            background-color: var(--secondary-light);
-            border-radius: var(--border-radius);
-            display: inline-block; /* So background fits content */
-        }
+/* ---------- headings ---------- */
+header{text-align:center;margin-bottom:30px;}
+h1{
+    color:var(--primary-color);margin-bottom:10px;
+    font-size:2.8rem;font-weight:900;
+    text-shadow:2px 2px 0 var(--primary-light);
+}
+h2{color:var(--secondary-color);margin-bottom:20px;font-size:2rem;font-weight:700;}
+h3{color:var(--dark-color);margin-bottom:15px;font-size:1.6rem;}
+.subheading{color:var(--gray-color);font-size:1.3rem;margin-bottom:25px;}
 
-        .problem-display.animate {
-            animation: pulseProblem 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncier pulse */
-        }
+/* ---------- screens ---------- */
+.screen{display:none;text-align:center;}
+.screen.active{display:block;animation:fadeIn 0.5s ease-out;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-        @keyframes pulseProblem {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
+/* ---------- game area ---------- */
+.problem-display{
+    font-size:clamp(2.5rem,10vw,4rem);
+    margin:30px 0;font-weight:900;color:var(--dark-color);
+    padding:15px;background-color:var(--secondary-light);
+    border-radius:var(--border-radius);display:inline-block;
+}
+.problem-display.animate{animation:pulseProblem 0.6s cubic-bezier(0.68,-0.55,0.27,1.55);}
+@keyframes pulseProblem{0%{transform:scale(1);}50%{transform:scale(1.15);}100%{transform:scale(1);}}
 
-        .answer-form {
-            display: flex;
-            justify-content: center;
-            align-items: center; /* Align items vertically */
-            margin: 25px 0;
-            gap: 15px; /* Space between input and button */
-        }
+/* ---------- form ---------- */
+.answer-form{display:flex;justify-content:center;gap:15px;margin:25px 0;}
+.answer-input{
+    padding:15px 20px;font-size:2rem;font-weight:700;
+    border:3px solid #e0e0e0;border-radius:var(--border-radius);
+    width:180px;text-align:center;
+    transition:border-color var(--transition-speed),box-shadow var(--transition-speed);
+    box-shadow:inset 0 2px 4px rgba(0,0,0,0.06);
+}
+.answer-input:focus{
+    outline:none;border-color:var(--accent-color);
+    box-shadow:0 0 0 4px rgba(255,217,61,0.5);
+}
 
-        .answer-input {
-            padding: 15px 20px;
-            font-size: 2rem; /* Larger input text */
-            font-family: var(--font-main);
-            font-weight: 700;
-            border: 3px solid #e0e0e0;
-            border-radius: var(--border-radius);
-            width: 180px; /* Wider input */
-            text-align: center;
-            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
-        }
+/* ---------- buttons ---------- */
+.btn{
+    padding:15px 30px;font-size:1.4rem;font-weight:700;
+    color:#fff;border:none;border-radius:var(--border-radius);cursor:pointer;
+    text-transform:uppercase;letter-spacing:1px;
+    background-image:linear-gradient(to bottom,var(--primary-color),var(--primary-color-dark));
+    box-shadow:0 4px 0 var(--primary-color-dark),0 6px 10px rgba(0,0,0,0.1);
+    transition:all var(--transition-speed) ease-out;
+}
+.btn:hover{
+    background-image:linear-gradient(to bottom,var(--primary-color-light),var(--primary-color));
+    transform:translateY(-2px);
+    box-shadow:0 6px 0 var(--primary-color-dark),0 8px 12px rgba(0,0,0,0.15);
+}
+.btn:active{transform:translateY(1px);box-shadow:0 2px 0 var(--primary-color-dark),0 4px 8px rgba(0,0,0,0.1);}
+.btn:disabled{
+    background-image:linear-gradient(to bottom,var(--gray-color),var(--gray-color-dark));
+    box-shadow:0 4px 0 var(--gray-color-dark);
+    cursor:not-allowed;transform:none;
+}
 
-        .answer-input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 4px rgba(255, 217, 61, 0.5); /* Focus glow */
-        }
+/* colour variants */
+.btn-secondary{
+    background-image:linear-gradient(to bottom,var(--secondary-color),var(--secondary-color-dark));
+    box-shadow:0 4px 0 var(--secondary-color-dark),0 6px 10px rgba(0,0,0,0.1);
+}
+.btn-secondary:hover{
+    background-image:linear-gradient(to bottom,var(--secondary-color-light),var(--secondary-color));
+    box-shadow:0 6px 0 var(--secondary-color-dark),0 8px 12px rgba(0,0,0,0.15);
+}
+.btn-warning{
+    background-image:linear-gradient(to bottom,var(--warning-color),var(--warning-color-dark));
+    color:var(--dark-color);
+    box-shadow:0 4px 0 var(--warning-color-dark),0 6px 10px rgba(0,0,0,0.1);
+}
+.btn-warning:hover{
+    background-image:linear-gradient(to bottom,var(--warning-color-light),var(--warning-color));
+    box-shadow:0 6px 0 var(--warning-color-dark),0 8px 12px rgba(0,0,0,0.15);
+}
+.btn-danger{
+    background-image:linear-gradient(to bottom,var(--danger-color),var(--danger-color-dark));
+    box-shadow:0 4px 0 var(--danger-color-dark),0 6px 10px rgba(0,0,0,0.1);
+}
+.btn-danger:hover{
+    background-image:linear-gradient(to bottom,var(--danger-color-light),var(--danger-color));
+    box-shadow:0 6px 0 var(--danger-color-dark),0 8px 12px rgba(0,0,0,0.15);
+}
+.btn-sm{padding:8px 15px;font-size:1rem;}
 
-        .btn {
-            padding: 15px 30px; /* Bigger buttons */
-            font-size: 1.4rem; /* Bigger text */
-            font-weight: 700;
-            background-image: linear-gradient(to bottom, var(--primary-color), darken(var(--primary-color), 10%));
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all var(--transition-speed) ease-out;
-            box-shadow: 0 4px 0 darken(var(--primary-color), 15%), 0 6px 10px rgba(0,0,0,0.1); /* 3D effect */
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+/* ---------- feedback ---------- */
+.feedback{
+    text-align:center;margin:25px 0;padding:20px;border-radius:var(--border-radius);
+    font-size:1.5rem;font-weight:700;opacity:0;min-height:70px;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    transform:scale(0.9);
+    transition:opacity var(--transition-speed),transform var(--transition-speed),background-color var(--transition-speed),color var(--transition-speed);
+}
+.feedback.visible{opacity:1;transform:scale(1);}
+.feedback.correct{
+    background-color:var(--success-color);color:var(--light-color);
+    box-shadow:0 0 15px rgba(84,214,91,0.5);
+}
+.feedback.correct::before{content:'🥳';font-size:1.8rem;}
+.feedback.incorrect{
+    background-color:var(--danger-color);color:var(--light-color);
+    box-shadow:0 0 15px rgba(255,71,87,0.5);
+}
+.feedback.incorrect::before{content:'🤔';font-size:1.8rem;}
+.shake{animation:shakeHorizontal 0.5s cubic-bezier(.36,.07,.19,.97) both;}
+@keyframes shakeHorizontal{
+    10%,90%{transform:translateX(-2px);}20%,80%{transform:translateX(4px);}
+    30%,50%,70%{transform:translateX(-6px);}40%,60%{transform:translateX(6px);}
+}
 
-        .btn:hover {
-            background-image: linear-gradient(to bottom, lighten(var(--primary-color), 5%), var(--primary-color));
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 darken(var(--primary-color), 15%), 0 8px 12px rgba(0,0,0,0.15);
-        }
-        .btn:active {
-            transform: translateY(1px);
-            box-shadow: 0 2px 0 darken(var(--primary-color), 15%), 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-
-        .btn:disabled {
-            background-image: linear-gradient(to bottom, var(--gray-color), darken(var(--gray-color), 10%));
-            cursor: not-allowed;
-            box-shadow: 0 4px 0 darken(var(--gray-color), 15%);
-            transform: none;
-        }
-
-        .btn-secondary {
-            background-image: linear-gradient(to bottom, var(--secondary-color), darken(var(--secondary-color), 10%));
-            box-shadow: 0 4px 0 darken(var(--secondary-color), 15%), 0 6px 10px rgba(0,0,0,0.1);
-        }
-        .btn-secondary:hover {
-            background-image: linear-gradient(to bottom, lighten(var(--secondary-color), 5%), var(--secondary-color));
-            box-shadow: 0 6px 0 darken(var(--secondary-color), 15%), 0 8px 12px rgba(0,0,0,0.15);
-        }
-         .btn-secondary:active {
-            box-shadow: 0 2px 0 darken(var(--secondary-color), 15%), 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-
-        .btn-warning {
-            background-image: linear-gradient(to bottom, var(--warning-color), darken(var(--warning-color), 10%));
-            color: var(--dark-color);
-            box-shadow: 0 4px 0 darken(var(--warning-color), 15%), 0 6px 10px rgba(0,0,0,0.1);
-        }
-         .btn-warning:hover {
-            background-image: linear-gradient(to bottom, lighten(var(--warning-color), 5%), var(--warning-color));
-            box-shadow: 0 6px 0 darken(var(--warning-color), 15%), 0 8px 12px rgba(0,0,0,0.15);
-        }
-         .btn-warning:active {
-            box-shadow: 0 2px 0 darken(var(--warning-color), 15%), 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .btn-danger {
-            background-image: linear-gradient(to bottom, var(--danger-color), darken(var(--danger-color), 10%));
-            box-shadow: 0 4px 0 darken(var(--danger-color), 15%), 0 6px 10px rgba(0,0,0,0.1);
-        }
-        .btn-danger:hover {
-            background-image: linear-gradient(to bottom, lighten(var(--danger-color), 5%), var(--danger-color));
-            box-shadow: 0 6px 0 darken(var(--danger-color), 15%), 0 8px 12px rgba(0,0,0,0.15);
-        }
-         .btn-danger:active {
-            box-shadow: 0 2px 0 darken(var(--danger-color), 15%), 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .btn-sm { /* For smaller buttons like logout */
-            padding: 8px 15px;
-            font-size: 1rem;
-        }
-
-        .feedback {
-            text-align: center;
-            margin: 25px 0;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            font-size: 1.5rem; /* Larger feedback text */
-            font-weight: 700;
-            opacity: 0;
-            min-height: 70px; /* Ensure space even when empty */
-            display: flex; /* For icon + text */
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transform: scale(0.9);
-            transition: opacity var(--transition-speed) ease-out, transform var(--transition-speed) ease-out, background-color var(--transition-speed), color var(--transition-speed);
-        }
-
-        .feedback.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .feedback.correct {
-            background-color: var(--success-color); /* Using success color */
-            color: var(--light-color);
-            box-shadow: 0 0 15px rgba(84, 214, 91, 0.5);
-        }
-        .feedback.correct::before {
-            content: '🥳'; /* Or use an SVG/FontAwesome icon */
-            font-size: 1.8rem;
-        }
-
-        .feedback.incorrect {
-            background-color: var(--danger-color); /* Using danger color */
-            color: var(--light-color);
-            box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
-        }
-        .feedback.incorrect::before {
-            content: '🤔'; /* Or use an SVG/FontAwesome icon */
-            font-size: 1.8rem;
-        }
-
-        .shake {
-            animation: shakeHorizontal 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
-        @keyframes shakeHorizontal {
-            10%, 90% { transform: translateX(-2px); }
-            20%, 80% { transform: translateX(4px); }
-            30%, 50%, 70% { transform: translateX(-6px); }
-            40%, 60% { transform: translateX(6px); }
-        }
-
-
-        /* Settings Panel */
-        .settings-panel {
-            background-color: var(--primary-light);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin: 20px auto; /* Center panel */
-            max-width: 600px; /* Limit width */
-        }
-         .settings-panel h3 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 20px;
-         }
-
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px; /* More space */
-            margin: 20px 0;
-            justify-content: center; /* Center checkboxes */
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            background-color: var(--light-color);
-            padding: 10px 15px;
-            border-radius: 20px; /* Pill shape */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-            transition: all var(--transition-speed);
-        }
-        .checkbox-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.12);
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            margin-right: 8px;
-            width: 20px; /* Larger checkboxes */
-            height: 20px; /* IMPORTANT: Completed this line, assuming 20px */
-        }
-        /* Assuming there might be more CSS rules or a closing brace for .checkbox-item input[type="checkbox"] was missing in the original snippet.
-           The CSS below this comment is what was provided after the cutoff in your original message.
-           If this CSS was supposed to be *inside* the .checkbox-item input[type="checkbox"] rule,
-           it needs to be moved, or this rule needs a closing brace `}` if it's complete.
-           For now, I am assuming .checkbox-item input[type="checkbox"] rule is complete with height: 20px;
-        */
-
-    </style>
+/* ---------- settings panel ---------- */
+.settings-panel{
+    background-color:var(--primary-light);
+    border-radius:var(--border-radius);
+    padding:25px;margin:20px auto;max-width:600px;
+}
+.settings-panel h3{color:var(--primary-color);text-align:center;margin-bottom:20px;}
+.checkbox-group{display:flex;flex-wrap:wrap;gap:15px;margin:20px 0;justify-content:center;}
+.checkbox-item{
+    display:flex;align-items:center;
+    background-color:var(--light-color);padding:10px 15px;border-radius:20px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.08);transition:all var(--transition-speed);
+}
+.checkbox-item:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.12);}
+.checkbox-item input[type="checkbox"]{
+    margin-right:8px;width:20px;height:20px;
+}
+</style>
 </head>
-<body>
 
-    </body>
+<body>
+<div class="container">
+
+    <header>
+        <h1>Math Super Star Adventure! 🚀</h1>
+        <p class="subheading">Answer quickly to collect stars!</p>
+    </header>
+
+    <!-- ===== START SCREEN ===== -->
+    <section id="start-screen" class="screen active">
+        <button id="start-btn" class="btn btn-secondary">Start Game</button>
+    </section>
+
+    <!-- ===== GAME SCREEN ===== -->
+    <section id="game-screen" class="screen">
+        <div id="problem" class="problem-display"></div>
+
+        <form id="answer-form" class="answer-form">
+            <input id="answer-input" type="number" class="answer-input" autocomplete="off" />
+            <button type="submit" class="btn">Submit</button>
+        </form>
+
+        <div id="feedback" class="feedback"></div>
+    </section>
+
+    <!-- ===== END SCREEN ===== -->
+    <section id="end-screen" class="screen">
+        <h2>Game Over!</h2>
+        <p id="score-display"></p>
+        <button id="restart-btn" class="btn btn-secondary">Play Again</button>
+    </section>
+
+    <!-- ===== SETTINGS ===== -->
+    <div class="settings-panel">
+        <h3>Game Settings</h3>
+        <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" id="addition" checked> Addition</label>
+            <label class="checkbox-item"><input type="checkbox" id="subtraction" checked> Subtraction</label>
+            <label class="checkbox-item"><input type="checkbox" id="multiplication"> Multiplication</label>
+            <label class="checkbox-item"><input type="checkbox" id="division"> Division</label>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== 40-line demo script: remove if you have your own game logic ===== -->
+<script>
+const qs = id => document.getElementById(id);
+
+/* screen elements */
+const startScr = qs('start-screen'),
+      gameScr  = qs('game-screen'),
+      endScr   = qs('end-screen');
+
+const startBtn   = qs('start-btn'),
+      restartBtn = qs('restart-btn'),
+      problemEl  = qs('problem'),
+      form       = qs('answer-form'),
+      input      = qs('answer-input'),
+      feedback   = qs('feedback'),
+      scoreEl    = qs('score-display');
+
+let score = 0, answer = 0, timerId;
+
+/* helpers */
+const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+function nextProblem() {
+    const a = rand(1, 10), b = rand(1, 10);
+    answer = a + b;                         // only addition for demo
+    problemEl.textContent = `${a} + ${b}`;
+    problemEl.classList.add('animate');
+    setTimeout(() => problemEl.classList.remove('animate'), 600);
+}
+
+function startGame() {
+    score = 0;
+    startScr.classList.remove('active');
+    endScr.classList.remove('active');
+    gameScr.classList.add('active');
+    nextProblem();
+    input.value = '';
+    input.focus();
+
+    /* 60-second round */
+    clearTimeout(timerId);
+    timerId = setTimeout(endGame, 60000);
+}
+
+function endGame() {
+    gameScr.classList.remove('active');
+    endScr.classList.add('active');
+    scoreEl.textContent = `Your Score: ${score}`;
+    clearTimeout(timerId);
+}
+
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    const val = Number(input.value);
+    if (val === answer) {
+        score++;
+        feedback.textContent = 'Correct!';
+        feedback.className = 'feedback visible correct';
+        nextProblem();
+    } else {
+        feedback.textContent = 'Try again!';
+        feedback.className = 'feedback visible incorrect shake';
+        setTimeout(() => feedback.classList.remove('shake'), 500);
+    }
+    input.value = '';
+    input.focus();
+});
+
+startBtn.addEventListener('click', startGame);
+restartBtn.addEventListener('click', () => { startScr.classList.add('active'); endScr.classList.remove('active'); });
+</script>
+</body>
 </html>
