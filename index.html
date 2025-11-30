@@ -170,20 +170,6 @@
       font-size: 0.9rem;
     }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--secondary-dark);
-      box-shadow: none;
-      border: 2px dashed rgba(78, 205, 196, 0.5);
-    }
-
-    .btn-ghost:hover {
-      background: rgba(78, 205, 196, 0.06);
-      box-shadow: none;
-      transform: none;
-    }
-
-    /* layout helpers */
     .btn-row {
       display: flex;
       flex-wrap: wrap;
@@ -378,6 +364,65 @@
       font-weight: 600;
     }
 
+    /* timer toggle */
+    .toggle-row {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .toggle input {
+      display: none;
+    }
+
+    .toggle-slider {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.5);
+      transition: background var(--trans);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .toggle-slider::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      top: 3px;
+      left: 3px;
+      transition: transform var(--trans);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    .toggle input:checked + .toggle-slider {
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .toggle input:checked + .toggle-slider::before {
+      transform: translateX(20px);
+    }
+
+    .toggle-help {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+    }
+
     /* stats grid */
     .grid {
       display: grid;
@@ -449,6 +494,18 @@
       font-size: 0.95rem;
     }
 
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     /* responsive */
     @media (max-width: 640px) {
       .container {
@@ -496,6 +553,14 @@
           <button type="button" class="btn btn-secondary btn-sm quick-btn" data-questions="20">Standard 20</button>
           <button type="button" class="btn btn-secondary btn-sm quick-btn" data-questions="40">Challenge 40</button>
         </div>
+        <div class="toggle-row">
+          <label class="toggle" for="show-timer-toggle">
+            <input type="checkbox" id="show-timer-toggle" />
+            <span class="toggle-slider"></span>
+            <span>Show timer</span>
+          </label>
+        </div>
+        <p class="toggle-help">Leave this off if timers feel stressful.</p>
       </div>
       <div class="btn-row">
         <button id="start-btn" class="btn">Start practice</button>
@@ -509,7 +574,7 @@
       <div class="meta-row">
         <div class="meta-item">Streak: <strong id="streak">0</strong></div>
         <div class="meta-item">Best streak: <strong id="best-streak">0</strong></div>
-        <div class="meta-item">Time: <strong id="timer">0s</strong></div>
+        <div class="meta-item" id="timer-wrapper">Time: <strong id="timer">0s</strong></div>
       </div>
       <div id="problem" class="problem-display" aria-live="polite"></div>
       <form id="answer-form" class="answer-form" autocomplete="off">
@@ -536,7 +601,7 @@
       <h2>Your progress</h2>
       <p class="subheading" style="margin-bottom: 6px;">Every box shows how well you know a fact.</p>
       <div id="stats-grid" class="grid"></div>
-      <div class="stats-legend" aria-hidden="false">
+      <div class="stats-legend">
         <div class="stats-legend-item"><span class="legend-box box-0"></span> New / just started</div>
         <div class="stats-legend-item"><span class="legend-box box-1"></span> Learning</div>
         <div class="stats-legend-item"><span class="legend-box box-2"></span> Getting there</div>
@@ -571,6 +636,7 @@
     let bestStreak = 0;
     let timerId = null;
     let sessionStartTime = null;
+    let showTimer = false;
 
     // ------------------ init UI ------------------
     const tableSelect = $('table-select');
@@ -580,15 +646,15 @@
       const input = document.createElement('input');
       input.type = 'checkbox';
       input.value = String(n);
+      // Default: focus on 2× table only
       if (n === 2) {
-        input.checked = true; // default: focus on 2× table
+        input.checked = true;
       }
       label.appendChild(input);
       label.append(` ${n}×`);
       tableSelect.appendChild(label);
     }
 
-    // screen controls
     const screens = {
       start: $('start-screen'),
       game: $('game-screen'),
@@ -708,6 +774,12 @@
       $('best-streak').textContent = bestStreak;
     }
 
+    function applyTimerVisibility() {
+      const wrapper = $('timer-wrapper');
+      if (!wrapper) return;
+      wrapper.style.display = showTimer ? '' : 'none';
+    }
+
     // ------------------ gameplay ------------------
     function nextQuestion() {
       if (asked === totalQuestions) return finishSession();
@@ -769,10 +841,12 @@
       stopTimer();
       show('end');
       const accuracy = asked ? Math.round((correctCount * 100) / asked) : 0;
+      const durationSecs = sessionStartTime ? Math.floor((Date.now() - sessionStartTime) / 1000) : 0;
       const summaryText = `You answered ${asked} questions with ${accuracy}% accuracy.`;
       $('summary').textContent = summaryText;
       renderTrickyFacts();
-      saveLastSession({ total: asked, correct: correctCount, accuracy });
+      // store duration for analytics / future use
+      saveLastSession({ total: asked, correct: correctCount, accuracy, duration: durationSecs });
       renderLastSession();
     }
 
@@ -847,6 +921,8 @@
       asked = 0;
       correctCount = 0;
       resetStreak();
+      showTimer = $('show-timer-toggle').checked;
+      applyTimerVisibility();
       startTimer();
       show('game');
       nextQuestion();
@@ -879,7 +955,7 @@
       });
     });
 
-    // Allow pressing Enter on input to submit even if button not focused
+    // Allow pressing Enter to submit
     $('answer-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -887,8 +963,9 @@
       }
     });
 
-    // initial render of last session text
+    // initial render
     renderLastSession();
+    applyTimerVisibility(); // default: hide timer
   </script>
 </body>
 </html>
