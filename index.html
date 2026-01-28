@@ -1,971 +1,855 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Times-Tables Super Star 🚀</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --primary: #ff6b6b;
-      --primary-dark: #e55b5b;
-      --primary-light: #ff8080;
-      --secondary: #4ecdc4;
-      --secondary-dark: #45b3ab;
-      --secondary-light: #65d8d2;
-      --success: #54d65b;
-      --danger: #ff4757;
-      --warning: #ffa500;
-      --gray: #95a5a6;
-      --gray-dark: #7f8c8d;
-      --background: #f7f9fc;
-      --font-main: "Nunito", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      --radius: 12px;
-      --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      --trans: 0.3s;
-    }
-
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: var(--font-main);
-      background: radial-gradient(circle at top, #ffe9ec 0, #f7f9fc 55%, #e3f7f4 100%);
-      color: #2c3a47;
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 900px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 25px;
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.09);
-      border: 2px solid rgba(255, 255, 255, 0.6);
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    h1 {
-      font-size: 2.8rem;
-      font-weight: 900;
-      color: var(--primary);
-      text-align: center;
-      text-shadow: 2px 2px 0 var(--primary-light);
-      letter-spacing: 0.04em;
-    }
-
-    .title-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(78, 205, 196, 0.12);
-      color: var(--secondary-dark);
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-top: 6px;
-      text-transform: uppercase;
-    }
-
-    h2 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--secondary);
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .subheading {
-      text-align: center;
-      color: var(--gray);
-      margin-bottom: 16px;
-      font-size: 1.1rem;
-    }
-
-    .subheading span {
-      font-weight: 700;
-      color: var(--secondary-dark);
-    }
-
-    .last-session {
-      text-align: center;
-      margin-bottom: 12px;
-      font-size: 0.95rem;
-      color: var(--gray-dark);
-    }
-
-    /* screens */
-    .screen {
-      display: none;
-      text-align: center;
-    }
-
-    .screen.active {
-      display: block;
-      animation: fadeIn 0.4s;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* buttons */
-    .btn {
-      padding: 14px 28px;
-      font-size: 1.05rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      border: none;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: all var(--trans);
-      color: #fff;
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      box-shadow: 0 4px 0 var(--primary-dark), 0 6px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 6px 0 var(--primary-dark), 0 10px 18px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 var(--primary-dark), 0 4px 8px rgba(0, 0, 0, 0.12);
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
-      box-shadow: 0 4px 0 var(--secondary-dark), 0 6px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-secondary:hover {
-      box-shadow: 0 6px 0 var(--secondary-dark), 0 10px 18px rgba(0, 0, 0, 0.16);
-    }
-
-    .btn-sm {
-      padding: 8px 16px;
-      font-size: 0.9rem;
-    }
-
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    /* problem display */
-    .problem-display {
-      font-size: clamp(2.5rem, 10vw, 4rem);
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--secondary-light), #b2f7ef);
-      padding: 18px 30px;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin: 26px 0 18px;
-      box-shadow: 0 10px 22px rgba(101, 216, 210, 0.35);
-      min-width: 220px;
-    }
-
-    .progress {
-      margin: 4px 0 6px;
-      font-size: 1.05rem;
-      color: var(--gray-dark);
-    }
-
-    .meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 6px;
-      font-size: 0.95rem;
-    }
-
-    .meta-item {
-      background: #f1f5f9;
-      border-radius: 999px;
-      padding: 4px 12px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      color: var(--gray-dark);
-    }
-
-    .meta-item strong {
-      color: #222f3e;
-    }
-
-    /* quick modes */
-    .quick-modes {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin: 10px 0 6px;
-    }
-
-    /* input */
-    .answer-form {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin: 14px 0 4px;
-      flex-wrap: wrap;
-    }
-
-    .answer-input {
-      font-size: 2rem;
-      font-weight: 700;
-      width: 180px;
-      text-align: center;
-      padding: 12px;
-      border: 3px solid #e0e0e0;
-      border-radius: var(--radius);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
-      transition: border-color var(--trans), box-shadow var(--trans), transform var(--trans);
-    }
-
-    .answer-input:focus {
-      outline: none;
-      border-color: var(--warning);
-      box-shadow: 0 0 0 4px rgba(255, 165, 0, 0.35);
-      transform: translateY(-1px);
-    }
-
-    /* feedback */
-    .feedback {
-      min-height: 70px;
-      margin: 18px 0 10px;
-      font-size: 1.25rem;
-      font-weight: 800;
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity var(--trans), transform var(--trans);
-      padding: 10px 12px;
-    }
-
-    .feedback.visible {
-      opacity: 1;
-    }
-
-    .feedback.correct {
-      background: var(--success);
-      color: #fff;
-      animation: pop 0.3s;
-    }
-
-    .feedback.incorrect {
-      background: var(--danger);
-      color: #fff;
-    }
-
-    @keyframes pop {
-      0% { transform: scale(0.9); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      75% { transform: translateX(4px); }
-    }
-
-    .problem-display.shake {
-      animation: shake 0.25s;
-    }
-
-    /* settings */
-    .settings-panel {
-      background: var(--primary-light);
-      padding: 18px 16px 16px;
-      border-radius: var(--radius);
-      margin-top: 10px;
-      color: #fff;
-      box-shadow: 0 6px 16px rgba(229, 91, 91, 0.5);
-    }
-
-    .settings-panel h3 {
-      margin-bottom: 8px;
-      font-size: 1.1rem;
-    }
-
-    .checkbox-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 10px 0 6px;
-    }
-
-    .checkbox-item {
-      background: #fff;
-      border-radius: 20px;
-      padding: 6px 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-      color: #2c3a47;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-
-    .checkbox-item input {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-
-    .number-input {
-      margin-top: 8px;
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      font-size: 0.95rem;
-      align-items: center;
-    }
-
-    .number-input input {
-      width: 80px;
-      text-align: center;
-      padding: 6px;
-      border: 2px solid var(--secondary);
-      border-radius: var(--radius);
-      font-weight: 600;
-    }
-
-    /* timer toggle */
-    .toggle-row {
-      margin-top: 12px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .toggle input {
-      display: none;
-    }
-
-    .toggle-slider {
-      position: relative;
-      width: 44px;
-      height: 24px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.5);
-      transition: background var(--trans);
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-
-    .toggle-slider::before {
-      content: "";
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #fff;
-      top: 3px;
-      left: 3px;
-      transition: transform var(--trans);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    }
-
-    .toggle input:checked + .toggle-slider {
-      background: rgba(0, 0, 0, 0.25);
-    }
-
-    .toggle input:checked + .toggle-slider::before {
-      transform: translateX(20px);
-    }
-
-    .toggle-help {
-      margin-top: 4px;
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.85);
-      text-align: center;
-    }
-
-    /* stats grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(10, minmax(0, 1fr));
-      gap: 4px;
-      margin-top: 16px;
-    }
-
-    .cell {
-      padding: 6px 2px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      color: #fff;
-      text-align: center;
-      cursor: default;
-      user-select: none;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-    }
-
-    .box-0 { background: var(--danger); }
-    .box-1 { background: #f66d0a; }
-    .box-2 { background: var(--warning); }
-    .box-3 { background: #9bc53d; }
-    .box-4 { background: var(--success); }
-    .box-na { background: var(--gray); opacity: 0.4; }
-
-    .stats-legend {
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 6px 18px;
-      font-size: 0.85rem;
-      color: var(--gray-dark);
-      text-align: left;
-    }
-
-    .stats-legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      justify-content: flex-start;
-    }
-
-    .legend-box {
-      width: 18px;
-      height: 12px;
-      border-radius: 4px;
-      display: inline-block;
-    }
-
-    /* tricky list */
-    #tricky-list {
-      margin-top: 16px;
-      text-align: left;
-    }
-
-    #tricky-list h3 {
-      font-size: 1.05rem;
-      margin-bottom: 4px;
-      color: #2c3a47;
-    }
-
-    #tricky-list ul {
-      padding-left: 18px;
-    }
-
-    #tricky-list li {
-      margin-bottom: 3px;
-      font-size: 0.95rem;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    /* responsive */
-    @media (max-width: 640px) {
-      .container {
-        padding: 18px 14px;
-      }
-
-      h1 {
-        font-size: 2.1rem;
-      }
-
-      .answer-form {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Times-Tables Super Star 🚀</h1>
-      <div class="title-badge" aria-hidden="true">⭐ Smart practice · spaced & fun</div>
-      <p class="subheading">Master <span>2×</span> to <span>10×</span> with smart repetition.</p>
-      <p id="last-session" class="last-session"></p>
-    </header>
-
-    <!-- Start Screen -->
-    <section id="start-screen" class="screen active" aria-label="Start screen">
-      <h2>Choose your practice</h2>
-      <div class="settings-panel" aria-label="Practice settings">
-        <h3>Select tables</h3>
-        <p style="font-size:0.85rem;margin-bottom:4px;">Tip: choose one table to focus on at a time.</p>
-        <div class="checkbox-group" id="table-select"></div>
-        <div class="number-input">
-          <label for="num-questions">Questions this round:</label>
-          <input type="number" id="num-questions" value="20" min="5" max="200" />
-        </div>
-        <div class="quick-modes" aria-label="Quick presets">
-          <button type="button" class="btn btn-secondary btn-sm quick-btn" data-questions="10">Quick 10</button>
-          <button type="button" class="btn btn-secondary btn-sm quick-btn" data-questions="20">Standard 20</button>
-          <button type="button" class="btn btn-secondary btn-sm quick-btn" data-questions="40">Challenge 40</button>
-        </div>
-        <div class="toggle-row">
-          <label class="toggle" for="show-timer-toggle">
-            <input type="checkbox" id="show-timer-toggle" />
-            <span class="toggle-slider"></span>
-            <span>Show timer</span>
-          </label>
-        </div>
-        <p class="toggle-help">Leave this off if timers feel stressful.</p>
-      </div>
-      <div class="btn-row">
-        <button id="start-btn" class="btn">Start practice</button>
-        <button id="stats-btn" class="btn btn-secondary btn-sm">View progress</button>
-      </div>
-    </section>
-
-    <!-- Game Screen -->
-    <section id="game-screen" class="screen" aria-label="Practice screen">
-      <div class="progress" id="progress">Question 1 / 20</div>
-      <div class="meta-row">
-        <div class="meta-item">Streak: <strong id="streak">0</strong></div>
-        <div class="meta-item">Best streak: <strong id="best-streak">0</strong></div>
-        <div class="meta-item" id="timer-wrapper">Time: <strong id="timer">0s</strong></div>
-      </div>
-      <div id="problem" class="problem-display" aria-live="polite"></div>
-      <form id="answer-form" class="answer-form" autocomplete="off">
-        <label for="answer-input" class="sr-only">Your answer</label>
-        <input type="number" id="answer-input" class="answer-input" inputmode="numeric" />
-        <button class="btn" type="submit">OK</button>
-      </form>
-      <div id="feedback" class="feedback" aria-live="polite"></div>
-    </section>
-
-    <!-- End Screen -->
-    <section id="end-screen" class="screen" aria-label="Summary screen">
-      <h2>Great work! 🌟</h2>
-      <p id="summary"></p>
-      <div id="tricky-list"></div>
-      <div class="btn-row" style="margin-top: 20px;">
-        <button id="new-session" class="btn">New session</button>
-        <button id="see-stats" class="btn btn-secondary btn-sm">See full stats</button>
-      </div>
-    </section>
-
-    <!-- Stats Screen -->
-    <section id="stats-screen" class="screen" aria-label="Stats screen">
-      <h2>Your progress</h2>
-      <p class="subheading" style="margin-bottom: 6px;">Every box shows how well you know a fact.</p>
-      <div id="stats-grid" class="grid"></div>
-      <div class="stats-legend">
-        <div class="stats-legend-item"><span class="legend-box box-0"></span> New / just started</div>
-        <div class="stats-legend-item"><span class="legend-box box-1"></span> Learning</div>
-        <div class="stats-legend-item"><span class="legend-box box-2"></span> Getting there</div>
-        <div class="stats-legend-item"><span class="legend-box box-3"></span> Nearly mastered</div>
-        <div class="stats-legend-item"><span class="legend-box box-4"></span> Super star</div>
-        <div class="stats-legend-item"><span class="legend-box box-na"></span> Not seen yet</div>
-      </div>
-      <button id="back-home" class="btn btn-secondary btn-sm" style="margin-top: 18px;">Back to start</button>
-    </section>
-  </div>
-
-  <script>
-    // ------------------ constants ------------------
-    const BOX_DELAYS = [0, 1, 3, 7, 15]; // days until next due
-    const MAX_BOX = BOX_DELAYS.length - 1;
-    const STORAGE_KEY = 'ttStats-v1';
-    const SESSION_KEY = 'ttLastSession-v1';
-
-    // ------------------ helpers ------------------
-    const $ = (id) => document.getElementById(id);
-    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-    const today = () => new Date().setHours(0, 0, 0, 0);
-
-    // ------------------ state ------------------
-    let stats = loadStats();
-    let queue = [];
-    let current = null;
-    let totalQuestions = 20;
-    let asked = 0;
-    let correctCount = 0;
-    let currentStreak = 0;
-    let bestStreak = 0;
-    let timerId = null;
-    let sessionStartTime = null;
-    let showTimer = false;
-
-    // ------------------ init UI ------------------
-    const tableSelect = $('table-select');
-    for (let n = 2; n <= 10; n++) {
-      const label = document.createElement('label');
-      label.className = 'checkbox-item';
-      const input = document.createElement('input');
-      input.type = 'checkbox';
-      input.value = String(n);
-      // Default: focus on 2× table only
-      if (n === 2) {
-        input.checked = true;
-      }
-      label.appendChild(input);
-      label.append(` ${n}×`);
-      tableSelect.appendChild(label);
-    }
-
-    const screens = {
-      start: $('start-screen'),
-      game: $('game-screen'),
-      end: $('end-screen'),
-      stats: $('stats-screen'),
-    };
-
-    function show(name) {
-      Object.values(screens).forEach((s) => s.classList.remove('active'));
-      screens[name].classList.add('active');
-    }
-
-    // ------------------ storage ------------------
-    function loadStats() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-      } catch (e) {
-        return {};
-      }
-    }
-
-    function saveStats() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
-    }
-
-    function loadLastSession() {
-      try {
-        return JSON.parse(localStorage.getItem(SESSION_KEY));
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function saveLastSession(data) {
-      const payload = { ...data, timestamp: Date.now() };
-      localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
-    }
-
-    function renderLastSession() {
-      const info = loadLastSession();
-      const el = $('last-session');
-      if (!info || !info.total) {
-        el.textContent = '';
-        return;
-      }
-      el.textContent = `Last time: ${info.correct}/${info.total} correct (${info.accuracy}% accuracy).`;
-    }
-
-    // ------------------ fact helpers ------------------
-    function factKey(a, b) {
-      return `${a}x${b}`;
-    }
-
-    function getFact(a, b) {
-      const key = factKey(a, b);
-      if (!stats[key]) stats[key] = { box: 0, next: 0, correct: 0, attempts: 0 };
-      return stats[key];
-    }
-
-    function schedule(fact, correct) {
-      fact.attempts++;
-      if (correct) {
-        fact.correct++;
-        fact.box = Math.min(fact.box + 1, MAX_BOX);
-      } else {
-        fact.box = 0;
-      }
-      fact.next = today() + BOX_DELAYS[fact.box] * 86400000;
-    }
-
-    function isDue(fact) {
-      return fact.next <= today();
-    }
-
-    // ------------------ session creation ------------------
-    function buildQueue(selectedTables) {
-      const allFacts = [];
-      selectedTables.forEach((a) => {
-        for (let b = 1; b <= 10; b++) allFacts.push([a, b]);
-      });
-
-      const dueFacts = allFacts.filter(([a, b]) => isDue(getFact(a, b)));
-      const pool = dueFacts.length ? dueFacts : allFacts;
-      const q = [];
-
-      while (q.length < totalQuestions) {
-        const pair = pool[rand(0, pool.length - 1)];
-        q.push(pair);
-      }
-      return q;
-    }
-
-    // ------------------ timer & streak ------------------
-    function startTimer() {
-      if (timerId) clearInterval(timerId);
-      sessionStartTime = Date.now();
-      $('timer').textContent = '0s';
-      timerId = setInterval(() => {
-        const secs = Math.floor((Date.now() - sessionStartTime) / 1000);
-        $('timer').textContent = `${secs}s`;
-      }, 1000);
-    }
-
-    function stopTimer() {
-      if (timerId) clearInterval(timerId);
-      timerId = null;
-    }
-
-    function resetStreak() {
-      currentStreak = 0;
-      bestStreak = 0;
-      updateStreakDisplays();
-    }
-
-    function updateStreakDisplays() {
-      $('streak').textContent = currentStreak;
-      $('best-streak').textContent = bestStreak;
-    }
-
-    function applyTimerVisibility() {
-      const wrapper = $('timer-wrapper');
-      if (!wrapper) return;
-      wrapper.style.display = showTimer ? '' : 'none';
-    }
-
-    // ------------------ gameplay ------------------
-    function nextQuestion() {
-      if (asked === totalQuestions) return finishSession();
-      current = queue.shift();
-      if (!current) return finishSession();
-      const [a, b] = current;
-      const problemEl = $('problem');
-      problemEl.textContent = `${a} × ${b}`;
-      problemEl.classList.remove('shake');
-      const input = $('answer-input');
-      input.value = '';
-      input.focus();
-      $('progress').textContent = `Question ${asked + 1} / ${totalQuestions}`;
-      const feedbackEl = $('feedback');
-      feedbackEl.className = 'feedback';
-      feedbackEl.textContent = '';
-    }
-
-    function submitAnswer(e) {
-      e.preventDefault();
-      if (!current) return;
-
-      const raw = $('answer-input').value;
-      const val = Number(raw);
-      const [a, b] = current;
-      const correctAns = a * b;
-      const fact = getFact(a, b);
-      const correct = val === correctAns;
-
-      schedule(fact, correct);
-      saveStats();
-
-      const feedbackEl = $('feedback');
-      const problemEl = $('problem');
-
-      if (correct) {
-        correctCount++;
-        currentStreak++;
-        if (currentStreak > bestStreak) bestStreak = currentStreak;
-        feedbackEl.textContent = 'Correct! 🎉';
-        feedbackEl.className = 'feedback visible correct';
-      } else {
-        currentStreak = 0;
-        feedbackEl.textContent = `Oops… it’s ${correctAns}`;
-        feedbackEl.className = 'feedback visible incorrect';
-        problemEl.classList.add('shake');
-        setTimeout(() => problemEl.classList.remove('shake'), 250);
-        // reinsert incorrectly answered question soon
-        queue.splice(2, 0, current);
-      }
-
-      updateStreakDisplays();
-      asked++;
-
-      setTimeout(nextQuestion, 800);
-    }
-
-    function finishSession() {
-      stopTimer();
-      show('end');
-      const accuracy = asked ? Math.round((correctCount * 100) / asked) : 0;
-      const durationSecs = sessionStartTime ? Math.floor((Date.now() - sessionStartTime) / 1000) : 0;
-      const summaryText = `You answered ${asked} questions with ${accuracy}% accuracy.`;
-      $('summary').textContent = summaryText;
-      renderTrickyFacts();
-      // store duration for analytics / future use
-      saveLastSession({ total: asked, correct: correctCount, accuracy, duration: durationSecs });
-      renderLastSession();
-    }
-
-    // ------------------ tricky facts list ------------------
-    function renderTrickyFacts() {
-      const trickyFacts = Object.entries(stats)
-        .map(([key, v]) => {
-          const rate = v.attempts ? v.correct / v.attempts : 1;
-          return { key, attempts: v.attempts, rate };
-        })
-        .filter((o) => o.attempts >= 2 && o.rate < 0.8)
-        .sort((a, b) => a.rate - b.rate)
-        .slice(0, 8);
-
-      const div = $('tricky-list');
-      div.innerHTML = '';
-      if (!trickyFacts.length) {
-        div.textContent = 'No tricky facts – great job!';
-        return;
-      }
-
-      const heading = document.createElement('h3');
-      heading.textContent = 'Tricky facts to practise again:';
-      const ul = document.createElement('ul');
-
-      trickyFacts.forEach((o) => {
-        const li = document.createElement('li');
-        const [a, b] = o.key.split('x').map(Number);
-        const acc = Math.round(o.rate * 100);
-        li.textContent = `${a} × ${b} (accuracy ${acc}%)`;
-        ul.appendChild(li);
-      });
-
-      div.appendChild(heading);
-      div.appendChild(ul);
-    }
-
-    // ------------------ stats screen ------------------
-    function renderStatsGrid() {
-      const grid = $('stats-grid');
-      grid.innerHTML = '';
-      for (let a = 2; a <= 10; a++) {
-        for (let b = 1; b <= 10; b++) {
-          const fact = getFact(a, b);
-          const cell = document.createElement('div');
-          cell.className = 'cell ' + (fact.attempts ? `box-${fact.box}` : 'box-na');
-          cell.textContent = `${a}×${b}`;
-          if (fact.attempts) {
-            const rate = Math.round((fact.correct / fact.attempts) * 100);
-            const nextDate = fact.next
-              ? new Date(fact.next).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })
-              : 'today';
-            cell.title = `Attempts: ${fact.attempts}\nAccuracy: ${rate}%\nNext due: ${nextDate}`;
-          } else {
-            cell.title = 'Not seen yet';
-          }
-          grid.appendChild(cell);
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Math Quest: Super Star! 🚀</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=VT323&family=Spectral:wght@400;700;800&family=Luckiest+Guy&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            /* Classic Theme */
+            --primary: #ff6b6b;
+            --primary-dark: #e55b5b;
+            --primary-light: #ff8080;
+            --secondary: #4ecdc4;
+            --secondary-dark: #45b3ab;
+            --secondary-light: #65d8d2;
+            --success: #54d65b;
+            --danger: #ff4757;
+            --warning: #ffa500;
+            --background: #f7f9fc;
+            --container-bg: #ffffff;
+            --text-main: #2c3a47;
+            --text-light: #95a5a6;
+            --font-main: "Nunito", sans-serif;
+            --radius: 18px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --xp-bar: #54d65b;
         }
-      }
-    }
 
-    // ------------------ event wiring ------------------
-    $('start-btn').onclick = () => {
-      const checked = [...tableSelect.querySelectorAll('input:checked')].map((i) => Number(i.value));
-      if (!checked.length) {
-        alert('Please choose at least one table');
-        return;
-      }
-      const rawNumber = $('num-questions').value | 0;
-      totalQuestions = Math.min(Math.max(5, rawNumber), 200);
-      queue = buildQueue(checked);
-      asked = 0;
-      correctCount = 0;
-      resetStreak();
-      showTimer = $('show-timer-toggle').checked;
-      applyTimerVisibility();
-      startTimer();
-      show('game');
-      nextQuestion();
-    };
+        /* Hogwarts Theme */
+        [data-theme="hogwarts"] {
+            --primary: #740001;
+            /* Gryffindor Red */
+            --primary-dark: #5a0001;
+            --primary-light: #9e1a1a;
+            --secondary: #D3A625;
+            /* Gryffindor Gold */
+            --secondary-dark: #b08d1f;
+            --secondary-light: #e6c15c;
+            --background: #111111;
+            --container-bg: #222222;
+            --text-main: #f0e6d2;
+            --text-light: #b0a080;
+            --font-main: "Spectral", serif;
+            --xp-bar: #D3A625;
+            --shadow: 0 0 20px rgba(211, 166, 37, 0.2);
+        }
 
-    $('answer-form').addEventListener('submit', submitAnswer);
+        /* Minecraft Theme */
+        [data-theme="minecraft"] {
+            --primary: #5AA33E;
+            /* Grass */
+            --primary-dark: #3e702b;
+            --primary-light: #7cd058;
+            --secondary: #866043;
+            /* Dirt */
+            --secondary-dark: #634530;
+            --secondary-light: #a67c5b;
+            --background: #a5d6a7;
+            --container-bg: #c6c6c6;
+            --text-main: #333333;
+            --text-light: #555555;
+            --font-main: "VT323", monospace;
+            --radius: 0px;
+            --xp-bar: #3ae23a;
+            --shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+        }
 
-    $('new-session').onclick = () => {
-      show('start');
-    };
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    $('see-stats').onclick = () => {
-      renderStatsGrid();
-      show('stats');
-    };
+        body {
+            font-family: var(--font-main);
+            background: var(--background);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            transition: background var(--transition);
+            overflow-x: hidden;
+        }
 
-    $('stats-btn').onclick = () => {
-      renderStatsGrid();
-      show('stats');
-    };
+        /* Theme Specific Body Backgrounds */
+        [data-theme="hogwarts"] body {
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(116, 0, 1, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(211, 166, 37, 0.1) 0%, transparent 40%);
+        }
 
-    $('back-home').onclick = () => {
-      show('start');
-    };
+        [data-theme="minecraft"] body {
+            background-image: url('https://www.transparenttextures.com/patterns/pixel-weave.png');
+        }
 
-    document.querySelectorAll('.quick-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const n = Number(btn.dataset.questions);
-        $('num-questions').value = n;
-      });
-    });
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: auto;
+            padding: 30px;
+            background: var(--container-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: all var(--transition);
+        }
 
-    // Allow pressing Enter to submit
-    $('answer-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        $('answer-form').requestSubmit();
-      }
-    });
+        [data-theme="minecraft"] .container {
+            border: 4px solid #333;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+        }
 
-    // initial render
-    renderLastSession();
-    applyTimerVisibility(); // default: hide timer
-  </script>
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        [data-theme="minecraft"] h1 {
+            font-size: 4rem;
+            text-transform: uppercase;
+        }
+
+        [data-theme="hogwarts"] h1 {
+            font-family: 'Spectral', serif;
+            font-variant: small-caps;
+            letter-spacing: 2px;
+            color: var(--secondary);
+        }
+
+        /* XP Bar */
+        .xp-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .xp-bar-outer {
+            flex-grow: 1;
+            height: 12px;
+            background: #444;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 0 15px;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .xp-bar-inner {
+            height: 100%;
+            width: 0%;
+            background: var(--xp-bar);
+            transition: width 0.5s ease-out;
+            box-shadow: 0 0 10px var(--xp-bar);
+        }
+
+        .level-text {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--xp-bar);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: block;
+            animation: slideUp 0.5s var(--transition);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 32px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all var(--transition);
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            box-shadow: 0 4px 0 var(--primary-dark), 0 8px 15px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 0 var(--primary-dark), 0 12px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 0 var(--primary-dark), 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            box-shadow: 0 4px 0 var(--secondary-dark), 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="minecraft"] .btn {
+            border: 4px solid #333;
+            box-shadow: 4px 4px 0 #333;
+            border-radius: 0;
+        }
+
+        [data-theme="minecraft"] .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 #333;
+        }
+
+        [data-theme="minecraft"] .btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0 #333;
+        }
+
+        /* Problem Display */
+        .problem-card {
+            font-size: 5rem;
+            font-family: inherit;
+            margin: 40px 0;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: var(--radius);
+            position: relative;
+            display: inline-block;
+            min-width: 300px;
+            transition: all var(--transition);
+        }
+
+        [data-theme="hogwarts"] .problem-card {
+            background: url('https://www.transparenttextures.com/patterns/papyros.png');
+            color: var(--text-main);
+            border: 3px double var(--secondary);
+            box-shadow: 0 0 30px rgba(211, 166, 37, 0.15);
+        }
+
+        [data-theme="minecraft"] .problem-card {
+            background: #866043;
+            color: white;
+            border: 4px solid #333;
+            font-family: "VT323", monospace;
+        }
+
+        /* Input */
+        .answer-input {
+            font-size: 3rem;
+            font-weight: 900;
+            width: 200px;
+            text-align: center;
+            padding: 20px;
+            border: 4px solid var(--secondary);
+            border-radius: var(--radius);
+            background: var(--container-bg);
+            color: var(--text-main);
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .answer-input:focus {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+        }
+
+        /* Stats Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 6px;
+            margin: 20px 0;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border-radius: 6px;
+            color: white;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .box-0 {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .box-1 {
+            background: #fca5a5;
+        }
+
+        .box-2 {
+            background: #f87171;
+        }
+
+        .box-3 {
+            background: #4ecdc4;
+        }
+
+        .box-4 {
+            background: #54d65b;
+            box-shadow: 0 0 8px rgba(84, 214, 91, 0.5);
+        }
+
+        .box-na {
+            background: #e5e7eb;
+            color: #9ca3af;
+        }
+
+        /* Stylized Theme Buttons */
+        .theme-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .theme-btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-size: 1.4rem;
+            font-weight: 800;
+            transition: all var(--transition);
+            background: var(--container-bg);
+            box-shadow: var(--shadow);
+            color: var(--text-main);
+        }
+
+        .theme-btn:hover {
+            transform: translateY(-5px);
+        }
+
+        .theme-btn.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+            transform: scale(1.1);
+        }
+
+        .theme-btn[onclick*="hogwarts"] {
+            font-family: 'Spectral', serif;
+            color: #D3A625;
+            background: #740001;
+            border: 2px solid #D3A625;
+        }
+
+        .theme-btn[onclick*="minecraft"] {
+            font-family: 'VT323', monospace;
+            color: #fff;
+            background: #5AA33E;
+            border: 2px solid #3e702b;
+            text-transform: uppercase;
+        }
+
+        .theme-btn[onclick*="hogwarts"].active {
+            box-shadow: 0 0 20px #D3A625;
+        }
+
+        .theme-btn[onclick*="minecraft"].active {
+            box-shadow: 0 0 20px #5AA33E;
+        }
+
+        /* Feedback Overlay */
+        .feedback-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 5rem;
+            font-weight: 900;
+            pointer-events: none;
+            z-index: 1000;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .feedback-overlay.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Helpers */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .problem-card {
+                font-size: 3rem;
+                padding: 20px;
+            }
+
+            .answer-input {
+                font-size: 2rem;
+                width: 140px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body data-theme="hogwarts">
+
+    <div class="theme-switcher">
+        <button class="theme-btn active" onclick="setTheme('hogwarts')" title="Hogwarts Theme">Hogwarts</button>
+        <button class="theme-btn" onclick="setTheme('minecraft')" title="Minecraft Theme">Minecraft</button>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 id="title-text">Times Tables!</h1>
+            <p id="subheading-text">Master your magic numbers 🌟</p>
+        </header>
+
+        <!-- Start Screen -->
+        <section id="start-screen" class="screen active">
+            <h2>Prepare for Quest!</h2>
+            <div style="margin: 20px 0;">
+                <p>Which tables to practice?</p>
+                <div id="table-select"
+                    style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 15px 0;">
+                    <!-- JS populated -->
+                </div>
+            </div>
+            <div>
+                <button onclick="startPractice()" class="btn">Start Adventure! ⚔️</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <button onclick="showScreen('stats')" class="btn btn-secondary">My Progress 🏆</button>
+            </div>
+        </section>
+
+        <!-- Game Screen -->
+        <section id="game-screen" class="screen">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div id="streak-display" style="font-weight: 900; font-size: 1.2rem; color: var(--primary);">Streak: 🔥
+                    0</div>
+                <div id="timer-display" style="font-weight: 700;">Time: 0s</div>
+            </div>
+
+            <div id="problem" class="problem-card">7 × 8</div>
+
+            <form id="answer-form" autocomplete="off">
+                <input type="number" id="answer-input" class="answer-input" inputmode="numeric" autofocus />
+                <div style="margin-top: 20px;">
+                    <button type="submit" class="btn">CHECK! ✨</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- End Screen -->
+        <section id="end-screen" class="screen">
+            <h2 id="end-title">Quest Complete!</h2>
+            <div id="summary" style="font-size: 1.5rem; margin: 20px 0;"></div>
+            <div id="xp-gain" style="font-size: 2rem; font-weight: 900; color: var(--success); margin: 20px 0;">+0 XP
+            </div>
+            <button onclick="showScreen('start')" class="btn">Play Again! 🔄</button>
+            <button onclick="showScreen('stats')" class="btn btn-secondary">Full Stats 📊</button>
+        </section>
+
+        <!-- Stats Screen -->
+        <section id="stats-screen" class="screen">
+            <h2>Your Knowledge Map</h2>
+            <div id="stats-grid" class="grid"></div>
+            <div
+                style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; font-size: 0.8rem; margin-top: 20px;">
+                <span>🟥 Learning</span>
+                <span>🟨 Getting There</span>
+                <span>🟩 Mastered!</span>
+            </div>
+            <button onclick="showScreen('start')" class="btn btn-secondary" style="margin-top: 20px;">Back Home
+                🏠</button>
+        </section>
+    </div>
+
+    <!-- XP Bar -->
+    <div class="xp-container">
+        <div class="level-text" id="level-display">LVL 1</div>
+        <div class="xp-bar-outer">
+            <div id="xp-bar-fill" class="xp-bar-inner"></div>
+        </div>
+        <div class="level-text" id="xp-text">0 / 100 XP</div>
+    </div>
+
+    <div id="feedback-overlay" class="feedback-overlay">YES! 💥</div>
+
+    <script>
+        // --- Constants & Config ---
+        const DELAYS = [0, 1, 3, 7, 15]; // Spaced repetition days
+        const XP_PER_CORRECT = 10;
+        const XP_STREAK_BONUS = 5;
+        const XP_FAST_BONUS = 5; // < 3 seconds
+        const QUESTIONS_PER_ROUND = 20;
+
+        // --- State ---
+        let state = {
+            stats: JSON.parse(localStorage.getItem('tt_stats') || '{}'),
+            xp: parseInt(localStorage.getItem('tt_xp') || '0'),
+            theme: localStorage.getItem('tt_theme') || 'hogwarts',
+            currentStreak: 0,
+            asked: 0,
+            correct: 0,
+            roundQueue: [],
+            currentProblem: null,
+            startTime: null,
+            timerInterval: null
+        };
+
+        const THEMES = {
+            classic: { title: "Times Tables!", sub: "Master your magic numbers 🌟", correct: ["YES!", "GREAT!", "WOW!", "⭐"], incorrect: ["Oops!", "Try again", "💡"] },
+            hogwarts: { title: "Arithmancy Class", sub: "Earn points for your House! 🧙", correct: ["Brilliant!", "10 Points!", "Magic!", "✨"], incorrect: ["Expelliarmus!", "Not quite...", "📜"] },
+            minecraft: { title: "Math Craft", sub: "Don't let the Creepers win! 💎", correct: ["Loot!", "Epic!", "Critical Hit!", "⛏️"], incorrect: ["Ouch!", "Sizzzzze...", "📦"] }
+        };
+
+        // --- Init ---
+        function init() {
+            setTheme(state.theme);
+            renderTableSelect();
+            updateXPBar();
+
+            document.getElementById('answer-form').onsubmit = (e) => {
+                e.preventDefault();
+                checkAnswer();
+            };
+        }
+
+        function renderTableSelect() {
+            const container = document.getElementById('table-select');
+            for (let i = 2; i <= 10; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-secondary';
+                btn.style.padding = '10px 20px';
+                btn.textContent = `${i}×`;
+                btn.onclick = () => btn.classList.toggle('active_table');
+                btn.id = `table-${i}`;
+                if (i <= 5) btn.classList.add('active_table'); // Default selection
+
+                // Add specific styling for active state
+                const style = document.createElement('style');
+                style.innerHTML = `.active_table { background: var(--primary) !important; border-color: var(--primary-dark) !important; color: white !important; }`;
+                document.head.appendChild(style);
+
+                container.appendChild(btn);
+            }
+        }
+
+        function setTheme(t) {
+            state.theme = t;
+            document.body.setAttribute('data-theme', t);
+            localStorage.setItem('tt_theme', t);
+
+            const config = THEMES[t];
+            document.getElementById('title-text').textContent = config.title;
+            document.getElementById('subheading-text').textContent = config.sub;
+
+            // UI adjustments
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.theme-${t}`).classList.add('active');
+        }
+
+        // --- Game Logic ---
+        function startPractice() {
+            const selected = [];
+            for (let i = 2; i <= 10; i++) if (document.getElementById(`table-${i}`).classList.contains('active_table')) selected.push(i);
+
+            if (selected.length === 0) return alert("Select at least one table!");
+
+            state.asked = 0;
+            state.correct = 0;
+            state.currentStreak = 0;
+            state.roundQueue = buildQueue(selected);
+
+            showScreen('game');
+            nextQuestion();
+            startTimer();
+        }
+
+        function buildQueue(tables) {
+            let pool = [];
+            tables.forEach(t => {
+                for (let b = 1; b <= 10; b++) pool.push([t, b]);
+            });
+            // Shuffle
+            return pool.sort(() => Math.random() - 0.5).slice(0, QUESTIONS_PER_ROUND);
+        }
+
+        function nextQuestion() {
+            if (state.asked >= QUESTIONS_PER_ROUND) return finishGame();
+
+            state.currentProblem = state.roundQueue[state.asked];
+            const [a, b] = state.currentProblem;
+
+            const problemEl = document.getElementById('problem');
+            problemEl.textContent = `${a} × ${b}`;
+            problemEl.style.animation = 'none';
+            problemEl.offsetHeight; // trigger reflow
+            problemEl.style.animation = 'slideUp 0.4s ease';
+
+            const input = document.getElementById('answer-input');
+            input.value = '';
+            input.focus();
+
+            state.problemStartTime = Date.now();
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('answer-input');
+            const val = parseInt(input.value);
+            const [a, b] = state.currentProblem;
+            const correctAns = a * b;
+
+            const isCorrect = val === correctAns;
+            const timeTaken = (Date.now() - state.problemStartTime) / 1000;
+
+            if (isCorrect) {
+                state.correct++;
+                state.currentStreak++;
+
+                // XP Calculation
+                let earned = XP_PER_CORRECT;
+                if (state.currentStreak >= 5) earned += XP_STREAK_BONUS;
+                if (timeTaken < 3) earned += XP_FAST_BONUS;
+                addXP(earned);
+
+                showFeedback(true);
+                updateStats(a, b, true);
+
+                if (state.currentStreak % 10 === 0) fireConfetti();
+            } else {
+                state.currentStreak = 0;
+                showFeedback(false, correctAns);
+                updateStats(a, b, false);
+                // Shake effect
+                document.getElementById('problem').style.animation = 'shake 0.3s';
+            }
+
+            state.asked++;
+            updateUI();
+
+            setTimeout(nextQuestion, isCorrect ? 800 : 2000);
+        }
+
+        function showFeedback(success, correctVal) {
+            const overlay = document.getElementById('feedback-overlay');
+            const pool = success ? THEMES[state.theme].correct : THEMES[state.theme].incorrect;
+            const msg = pool[Math.floor(Math.random() * pool.length)];
+
+            overlay.textContent = success ? msg : `${msg} (${state.currentProblem[0]}×${state.currentProblem[1]}=${correctVal})`;
+            overlay.style.color = success ? 'var(--success)' : 'var(--danger)';
+            overlay.classList.add('show');
+
+            setTimeout(() => overlay.classList.remove('show'), 1200);
+
+            // Audio Feedback (Synthesized)
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            if (success) {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            }
+            osc.start();
+            osc.stop(ctx.currentTime + 0.3);
+        }
+
+        function finishGame() {
+            stopTimer();
+            showScreen('end');
+
+            const accuracy = Math.round((state.correct / state.asked) * 100);
+            document.getElementById('summary').textContent = `You got ${state.correct} out of ${state.asked} right! (${accuracy}%)`;
+
+            // Final XP Bonus
+            if (accuracy >= 90) {
+                addXP(50);
+                document.getElementById('xp-gain').textContent = "+50 Perfect Bonus! 🏆";
+                fireConfetti();
+            } else {
+                document.getElementById('xp-gain').textContent = "";
+            }
+        }
+
+        // --- XP & Progression ---
+        function addXP(amount) {
+            state.xp += amount;
+            localStorage.setItem('tt_xp', state.xp);
+            updateXPBar();
+        }
+
+        function updateXPBar() {
+            const level = Math.floor(state.xp / 100) + 1;
+            const xpInLevel = state.xp % 100;
+
+            document.getElementById('level-display').textContent = `LVL ${level}`;
+            document.getElementById('xp-text').textContent = `${xpInLevel} / 100 XP`;
+            document.getElementById('xp-bar-fill').style.width = `${xpInLevel}%`;
+
+            // Level up check
+            const oldLevel = parseInt(document.getElementById('level-display').dataset.old || "1");
+            if (level > oldLevel) {
+                fireConfetti();
+                // Show Level Up popup?
+            }
+            document.getElementById('level-display').dataset.old = level;
+        }
+
+        // --- Utils ---
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`${id}-screen`).classList.add('active');
+            if (id === 'stats') renderStatsGrid();
+        }
+
+        function updateUI() {
+            document.getElementById('streak-display').textContent = `Streak: 🔥 ${state.currentStreak}`;
+        }
+
+        function startTimer() {
+            state.startTime = Date.now();
+            state.timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+                document.getElementById('timer-display').textContent = `Time: ${elapsed}s`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(state.timerInterval);
+        }
+
+        function updateStats(a, b, correct) {
+            const key = `${a}x${b}`;
+            const meta = state.stats[key] || { box: 0, attempts: 0, correct: 0 };
+
+            meta.attempts++;
+            if (correct) {
+                meta.correct++;
+                meta.box = Math.min(meta.box + 1, 4);
+            } else {
+                meta.box = 0;
+            }
+            state.stats[key] = meta;
+            localStorage.setItem('tt_stats', JSON.stringify(state.stats));
+        }
+
+        function renderStatsGrid() {
+            const grid = document.getElementById('stats-grid');
+            grid.innerHTML = '';
+            for (let a = 2; a <= 10; a++) {
+                for (let b = 1; b <= 10; b++) {
+                    const key = `${a}x${b}`;
+                    const meta = state.stats[key];
+                    const cell = document.createElement('div');
+                    cell.className = 'cell ' + (meta ? `box-${meta.box}` : 'box-na');
+                    cell.textContent = `${a}×${b}`;
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function fireConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: state.theme === 'minecraft' ? ['#5AA33E', '#866043', '#ffffff'] :
+                    state.theme === 'hogwarts' ? ['#740001', '#D3A625', '#000000'] : null
+            });
+        }
+
+        // Add shake animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        init();
+    </script>
 </body>
+
 </html>
