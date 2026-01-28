@@ -312,7 +312,7 @@
         /* Stats Grid */
         .grid {
             display: grid;
-            grid-template-columns: repeat(9, 1fr);
+            grid-template-columns: repeat(10, 1fr);
             gap: 6px;
             margin: 20px 0;
         }
@@ -518,6 +518,8 @@
 
         <!-- Stats Screen -->
         <section id="stats-screen" class="screen">
+            <button onclick="showScreen('start')" class="btn btn-secondary" style="margin-bottom: 20px;">🏠 Back
+                Home</button>
             <h2>Your Knowledge Map</h2>
             <div id="stats-grid" class="grid"></div>
             <div
@@ -526,8 +528,6 @@
                 <span>🟨 Getting There</span>
                 <span>🟩 Mastered!</span>
             </div>
-            <button onclick="showScreen('start')" class="btn btn-secondary" style="margin-top: 20px;">Back Home
-                🏠</button>
         </section>
     </div>
 
@@ -618,10 +618,19 @@
 
         // --- Game Logic ---
         function startPractice() {
+            console.log("Starting Adventure...");
             const selected = [];
-            for (let i = 2; i <= 10; i++) if (document.getElementById(`table-${i}`).classList.contains('active_table')) selected.push(i);
+            for (let i = 2; i <= 10; i++) {
+                const el = document.getElementById(`table-${i}`);
+                if (el && el.classList.contains('active_table')) {
+                    selected.push(i);
+                }
+            }
 
-            if (selected.length === 0) return alert("Select at least one table!");
+            if (selected.length === 0) {
+                alert("Select at least one table!");
+                return;
+            }
 
             state.asked = 0;
             state.correct = 0;
@@ -638,8 +647,16 @@
             tables.forEach(t => {
                 for (let b = 1; b <= 10; b++) pool.push([t, b]);
             });
-            // Shuffle
-            return pool.sort(() => Math.random() - 0.5).slice(0, QUESTIONS_PER_ROUND);
+
+            // Ensure we have enough questions to fill the round
+            let q = [];
+            while (q.length < QUESTIONS_PER_ROUND) {
+                // Shuffle the pool each time we add it to keep it random
+                const shuffledPool = [...pool].sort(() => Math.random() - 0.5);
+                q = q.concat(shuffledPool);
+            }
+
+            return q.slice(0, QUESTIONS_PER_ROUND);
         }
 
         function nextQuestion() {
