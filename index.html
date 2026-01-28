@@ -454,6 +454,13 @@
                 grid-template-columns: repeat(5, 1fr);
             }
         }
+
+        .active_table {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+            border: 3px solid var(--secondary) !important;
+            box-shadow: 0 0 15px var(--primary) !important;
+            transform: scale(1.1);
+        }
     </style>
 </head>
 
@@ -565,7 +572,6 @@
         };
 
         const THEMES = {
-            classic: { title: "Times Tables!", sub: "Master your magic numbers 🌟", correct: ["YES!", "GREAT!", "WOW!", "⭐"], incorrect: ["Oops!", "Try again", "💡"] },
             hogwarts: { title: "Arithmancy Class", sub: "Earn points for your House! 🧙", correct: ["Brilliant!", "10 Points!", "Magic!", "✨"], incorrect: ["Expelliarmus!", "Not quite...", "📜"] },
             minecraft: { title: "Math Craft", sub: "Don't let the Creepers win! 💎", correct: ["Loot!", "Epic!", "Critical Hit!", "⛏️"], incorrect: ["Ouch!", "Sizzzzze...", "📦"] }
         };
@@ -584,6 +590,11 @@
 
         function renderTableSelect() {
             const container = document.getElementById('table-select');
+            // Store current active states if we are re-rendering
+            const currentActive = new Set();
+            container.querySelectorAll('.active_table').forEach(b => currentActive.add(b.id.split('-')[1]));
+            
+            container.innerHTML = '';
             for (let i = 2; i <= 10; i++) {
                 const btn = document.createElement('button');
                 btn.className = 'btn btn-secondary';
@@ -591,13 +602,14 @@
                 btn.textContent = `${i}×`;
                 btn.onclick = () => btn.classList.toggle('active_table');
                 btn.id = `table-${i}`;
-                if (i <= 5) btn.classList.add('active_table'); // Default selection
-
-                // Add specific styling for active state
-                const style = document.createElement('style');
-                style.innerHTML = `.active_table { background: var(--primary) !important; border-color: var(--primary-dark) !important; color: white !important; }`;
-                document.head.appendChild(style);
-
+                
+                // Default selection (2x-5x) or restore previous
+                if (currentActive.size > 0) {
+                    if (currentActive.has(String(i))) btn.classList.add('active_table');
+                } else if (i <= 5) {
+                    btn.classList.add('active_table');
+                }
+                
                 container.appendChild(btn);
             }
         }
@@ -608,12 +620,21 @@
             localStorage.setItem('tt_theme', t);
 
             const config = THEMES[t];
-            document.getElementById('title-text').textContent = config.title;
-            document.getElementById('subheading-text').textContent = config.sub;
+            if (config) {
+                document.getElementById('title-text').textContent = config.title;
+                document.getElementById('subheading-text').textContent = config.sub;
+            }
 
-            // UI adjustments
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector(`.theme-${t}`).classList.add('active');
+            // Sync theme buttons active state
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(`'${t}'`)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Re-render table selection to apply potential theme-specific colors
+            renderTableSelect();
         }
 
         // --- Game Logic ---
